@@ -28,8 +28,12 @@ class ExerciseRoutineStepView extends StatelessWidget {
           children: [
             YoutubePlayer(controller: videoController),
             SessionTitle(title: exercise.name.split('-').first.trim()),
-            ExerciseSetProperties(),
-            ExerciseSetDetails(),
+            ExerciseSetProperties(
+              details: exercise.details,
+            ),
+            ExerciseSetDetails(
+              details: exercise.details,
+            ),
           ],
         );
       },
