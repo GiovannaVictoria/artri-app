@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:artriapp/routes/index.dart';
 import 'package:artriapp/utils/helpers/index.dart';
@@ -9,27 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-class UserDiaryInitialSelection extends StatefulWidget {
-  const UserDiaryInitialSelection({super.key});
-
-  @override
-  State<UserDiaryInitialSelection> createState() =>
-      _UserDiaryInitialSelectionState();
-}
-
-class _UserDiaryInitialSelectionState extends State<UserDiaryInitialSelection> {
-  var currentMyth = MythsHelper().getRandomMyth();
-  late var timer = Timer.periodic(Duration(minutes: 1), (timer) {
-    setState(() {
-      currentMyth = MythsHelper().getNextMyth();
-    });
-  });
-
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
-  }
+class UserDiaryInitialSelection extends StatelessWidget {
+  final currentMyth = MythsHelper().getRandomMyth();
 
   @override
   Widget build(BuildContext context) {
