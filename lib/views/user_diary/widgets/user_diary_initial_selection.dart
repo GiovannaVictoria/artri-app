@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:artriapp/routes/index.dart';
 import 'package:artriapp/utils/helpers/index.dart';
+import 'package:artriapp/utils/helpers/myths_helper.dart';
 import 'package:artriapp/utils/index.dart';
 import 'package:artriapp/views/widgets/index.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +11,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 class UserDiaryInitialSelection extends StatelessWidget {
-  const UserDiaryInitialSelection({super.key});
+  final currentMyth = MythsHelper().getRandomMyth();
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +82,8 @@ class UserDiaryInitialSelection extends StatelessWidget {
           ],
         ),
         const Gap(32),
-        const QuestionCard(
-          question: 'Você está se sentindo bem?',
+        QuestionCard(
+          question: currentMyth.question,
         ),
       ],
     );
