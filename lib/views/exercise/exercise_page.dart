@@ -32,17 +32,19 @@ class ExercisePage extends StatelessWidget {
           ),
           const Gap(16),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () =>
+                context.push(PhysicalExerciseRoutes.infoAtividadeFisica),
             style: ElevatedButton.styleFrom(
               backgroundColor: Color(0xFF03A64A),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              fixedSize: const Size(300, 50),
+              fixedSize: const Size(300, 80),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
             child: const Text(
-              'Informações',
+              'Informações sobre atividades físicas',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 24,
                 color: Colors.white,

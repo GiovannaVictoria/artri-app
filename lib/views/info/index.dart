@@ -8,3 +8,4 @@ export 'tratamentos.dart';
 export 'emocional.dart';
 export 'exercicio_fisico.dart';
 export 'mitos_verdades.dart';
+export 'info_atividade_fisica.dart';

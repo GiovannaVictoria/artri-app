@@ -4,7 +4,6 @@ import 'package:gap/gap.dart';
 import 'package:artriapp/views/info/widget/info_template_page.dart';
 import 'package:artriapp/views/widgets/session_title.dart';
 import 'package:artriapp/views/widgets/bullet_list.dart';
-import 'package:artriapp/views/widgets/reference_link_text.dart';
 
 class SonoInfoPage extends StatelessWidget {
   const SonoInfoPage({super.key});
