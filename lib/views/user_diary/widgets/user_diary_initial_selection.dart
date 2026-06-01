@@ -84,6 +84,8 @@ class UserDiaryInitialSelection extends StatelessWidget {
         const Gap(32),
         QuestionCard(
           question: currentMyth.question,
+          onVerify: () => context.go(InfoRoutes.mythsTruthsInfoPage),
+          onDeny: () => context.go(InfoRoutes.mythsTruthsInfoPage),
         ),
       ],
     );
