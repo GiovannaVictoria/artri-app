@@ -34,6 +34,8 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
         return PhysicalExerciseRoutes.handExercises;
       case TrainingType.feet:
         return PhysicalExerciseRoutes.feetExercises;
+      case TrainingType.custom:
+        return PhysicalExerciseRoutes.customExercises;
       default:
         return PhysicalExerciseRoutes.customExercises;
     }
@@ -50,16 +52,27 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
       return;
     }
 
+    if (_currentTrainingType == TrainingType.custom) {
+      context.go('${PhysicalExerciseRoutes.customExercises}/${difficulty.toString()}');
+      return;
+    }
+
     var currentPath = RouterHelper.getUriFromContext(context);
 
-    var exercises = await _physicalExercisesService.getExercisesFromTraining(
-      _currentTrainingType!,
-      _currentDifficulty!,
-    );
+    try {
+      var exercises = await _physicalExercisesService.getExercisesFromTraining(
+        _currentTrainingType!,
+        _currentDifficulty!,
+      );
 
-    _queuedExercises = _queueExercises(exercises);
+      _queuedExercises = _queueExercises(exercises);
 
-    context.go('$currentPath/${difficulty.toString()}');
+      context.go('$currentPath/${difficulty.toString()}');
+    } catch (e) {
+      log('Error fetching exercises: $e');
+      // Mesmo com erro no servidor, vamos para a tela para você conseguir visualizar seu layout
+      context.go('$currentPath/${difficulty.toString()}'); // TODO: remover
+    }
   }
 
   List<ExerciseQueued> _queueExercises(List<Exercise> exercises) {

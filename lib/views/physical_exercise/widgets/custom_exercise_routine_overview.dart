@@ -1,46 +1,35 @@
 import 'package:artriapp/utils/index.dart';
-import 'package:artriapp/view_models/index.dart';
 import 'package:artriapp/views/physical_exercise/widgets/index.dart';
 import 'package:artriapp/views/widgets/index.dart';
+import 'package:artriapp/view_models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 
-class PhysicalExerciseRoutineOverview extends StatefulWidget {
-  const PhysicalExerciseRoutineOverview({super.key});
+class CustomExerciseRoutineOverview extends StatefulWidget {
+  const CustomExerciseRoutineOverview({super.key});
 
   @override
-  State<PhysicalExerciseRoutineOverview> createState() =>
-      _PhysicalExerciseRoutineOverviewState();
+  State<CustomExerciseRoutineOverview> createState() =>
+      _CustomExerciseRoutineOverviewState();
 }
 
-class _PhysicalExerciseRoutineOverviewState
-    extends State<PhysicalExerciseRoutineOverview> {
+class _CustomExerciseRoutineOverviewState
+    extends State<CustomExerciseRoutineOverview> {
   bool orientationsOpen = false;
 
+  // TODO: Implementar
   void handleStartButton(
-    BuildContext context,
-    PhysicalExercisesViewModel viewModel,
-  ) {
-    if (orientationsOpen) {
-      setState(() => orientationsOpen = false);
-      viewModel.handleStartExercises(context);
-      return;
-    }
-
-    setState(() => orientationsOpen = true);
-    showDialog(
-      builder: (context) => OrientationsDialog(),
-      context: context,
-    );
-  }
+      BuildContext context,
+      PhysicalExercisesViewModel viewModel,
+  ) {}
 
   @override
   Widget build(BuildContext context) {
     return Consumer<PhysicalExercisesViewModel>(
       builder: (context, viewModel, child) {
-        int exerciseCount = viewModel.exercises.length;
+        int categoriesCount = CustomType.values.length;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -53,11 +42,10 @@ class _PhysicalExerciseRoutineOverviewState
                 child: ListView.separated(
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 16),
-                  itemCount: exerciseCount,
+                  itemCount: categoriesCount,
                   itemBuilder: (context, index) => ExerciseTile(
-                    exerciseName:
-                        viewModel.exercises[index].name.split('-').first,
-                    customIcon: CupertinoIcons.play_arrow_solid,
+                    exerciseName: 'Escolha X exercícios da categoria "${CustomType.values.elementAt(index).toString()}"',
+                    customIcon: CupertinoIcons.create,
                   ),
                 ),
               ),
