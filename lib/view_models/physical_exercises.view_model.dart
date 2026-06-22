@@ -157,6 +157,8 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
     try {
       var currentPath = RouterHelper.getUriFromContext(context);
       int startIndex = 0;
+
+      _customExercisesIds.clear();
       
       _customExercisesCache[startIndex] = await _physicalExercisesService.getCustomExercisesFromTraining(
           TrainingType.custom, 
@@ -165,7 +167,7 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
       );
       
       notifyListeners();
-      context.push('$currentPath/$startIndex');
+      context.push('$currentPath/selection/$startIndex');
     } catch (e) {
       log('Error fetching trainings: $e');
     }
@@ -174,8 +176,15 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   void handleUpdateIndexCustomTraining(BuildContext context, int currentIndex) async {
     int nextIndex = currentIndex + 1;
     if (nextIndex == _categoriesCount) {
-      // TODO: implementar finalização
-      log('_customExercisesIds: $_customExercisesIds');
+      var exercises = await _physicalExercisesService.getCustomExercisesFromIdsList(_customExercisesIds);
+      _queuedExercises = _queueExercises(exercises);
+
+      var currentPath = RouterHelper.getUriFromContext(context);
+      var segments = currentPath.pathSegments;
+      var baseSegments = segments.sublist(0, segments.length - 2);
+      var basePath = '/${baseSegments.join('/')}';
+
+      context.go('$basePath/step/${currentExercise!.id}');
     } else {
       try {
         if (!_customExercisesCache.containsKey(nextIndex)) {
@@ -216,7 +225,7 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
 
     if (hasCurrentExerciseId) {
       cleanedPath =
-          '/${currentPathSegments.sublist(0, currentPathSegments.length - 1).join('/')}';
+      '/${currentPathSegments.sublist(0, currentPathSegments.length - 1).join('/')}';
     }
 
     return '$cleanedPath/${currentExercise!.id}';

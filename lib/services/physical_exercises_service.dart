@@ -62,4 +62,13 @@ class PhysicalExercisesService {
           exercises.where((e) => nthCustomTraining.exercises.contains(e.id)).toList(),
     );
   }
+
+  Future<List<Exercise>> getCustomExercisesFromIdsList(
+      List<int> ids,
+  ) {
+    return getExercises().then(
+          (exercises) =>
+          exercises.where((e) => ids.contains(e.id)).toList(),
+    );
+  }
 }

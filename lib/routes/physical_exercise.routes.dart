@@ -101,8 +101,14 @@ class PhysicalExerciseRoutes implements RoutesSession {
                   const CustomExerciseRoutineOverview(),
               routes: [
                 GoRoute(
-                  path: ':trainingId',
+                  path: 'selection/:trainingId',
                   builder: (context, state) => const CustomExerciseSelection(),
+                ),
+                GoRoute(
+                  path: 'step/:exerciseId',
+                  builder: (context, state) => ExerciseRoutineStepView(
+                    key: ValueKey(state.pathParameters['exerciseId']),
+                  ),
                 ),
               ],
             ),
