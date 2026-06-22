@@ -36,6 +36,15 @@ class _CustomExerciseRoutineOverviewState
           mainAxisSize: MainAxisSize.min,
           spacing: 16,
           children: [
+            Text(
+              'Vamos começar a montar sua rotina de exercícios personalizada de hoje! Clique para escolher os exercícios indicados abaixo:',
+              style: GoogleFonts.montserrat(
+                textStyle: const TextStyle(
+                  fontSize: 16,
+                  color: AppColors.darkGreen,
+                ),
+              ),
+            ),
             Flexible(
               fit: FlexFit.tight,
               child: Scrollbar(
@@ -44,6 +53,7 @@ class _CustomExerciseRoutineOverviewState
                       const SizedBox(height: 16),
                   itemCount: categoriesCount,
                   itemBuilder: (context, index) => ExerciseTile(
+                    // TODO: substituir X pelos valores numéricos
                     exerciseName: 'Escolha X exercícios da categoria "${CustomType.values.elementAt(index).toString()}"',
                     customIcon: CupertinoIcons.create,
                   ),
