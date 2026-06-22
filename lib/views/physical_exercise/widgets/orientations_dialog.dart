@@ -29,13 +29,13 @@ class OrientationsDialog extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.warning_amber_outlined,
-                    size: 102,
+                    size: 80,
                     color: Color.fromARGB(255, 255, 102, 0),
                   ),
                   Text(
                     'ATENÇÃO!',
                     style: GoogleFonts.montserrat(
-                      fontSize: 36,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: AppColors.darkGreen,
                     ),
@@ -45,27 +45,27 @@ class OrientationsDialog extends StatelessWidget {
             ),
             Text(
               'Antes de iniciar os exercícios, para sua segurança:',
-              style: GoogleFonts.montserrat(fontSize: 24),
+              style: GoogleFonts.montserrat(fontSize: 20),
             ),
             Text(
               '- Escolha um local seguro, sem objetos que possam causar quedas.',
-              style: GoogleFonts.montserrat(fontSize: 20),
+              style: GoogleFonts.montserrat(fontSize: 16),
             ),
             Text(
               '- Use roupas confortáveis e calçados firmes, se necessário.',
-              style: GoogleFonts.montserrat(fontSize: 20),
+              style: GoogleFonts.montserrat(fontSize: 16),
             ),
             Text(
               '- Faça os movimentos devagar, respeitando seus limites. Caso não consiga realizar algum exercício, passe para o próximo.',
-              style: GoogleFonts.montserrat(fontSize: 20),
+              style: GoogleFonts.montserrat(fontSize: 16),
             ),
             Text(
               '- Se sentir dor forte, tontura ou falta de ar, pare e procure orientação profissional.',
-              style: GoogleFonts.montserrat(fontSize: 20),
+              style: GoogleFonts.montserrat(fontSize: 16),
             ),
             Text(
               '- Mantenha água por perto e lembre-se de respirar com calma durante os exercícios.',
-              style: GoogleFonts.montserrat(fontSize: 20),
+              style: GoogleFonts.montserrat(fontSize: 16),
             ),
           ],
         ),

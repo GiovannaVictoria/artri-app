@@ -1,4 +1,5 @@
 import 'package:artriapp/utils/index.dart';
+import 'package:artriapp/utils/helpers/index.dart';
 import 'package:artriapp/views/physical_exercise/widgets/index.dart';
 import 'package:artriapp/views/widgets/index.dart';
 import 'package:artriapp/view_models/index.dart';
@@ -17,21 +18,23 @@ class CustomExerciseSelection extends StatefulWidget {
 
 class _CustomExerciseSelectionState
     extends State<CustomExerciseSelection> {
-  bool orientationsOpen = false;
-
-
-  // TODO: implementar
   void handleNextButton(
       BuildContext context,
       PhysicalExercisesViewModel viewModel,
+      int trainingId,
   ) {
-    viewModel.handleUpdateIndexCustomTraining(context);
+    viewModel.handleUpdateIndexCustomTraining(context, trainingId);
   }
 
   @override
   Widget build(BuildContext context) {
+    final String? trainingIdRaw = RouterHelper.getPathParameterFromContext(context, 'trainingId');
+    final int trainingId = int.tryParse(trainingIdRaw ?? '0') ?? 0;
+
     return Consumer<PhysicalExercisesViewModel>(
       builder: (context, viewModel, child) {
+        final exercises = viewModel.getExercisesForIndex(trainingId);
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -53,17 +56,33 @@ class _CustomExerciseSelectionState
                 child: ListView.separated(
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 16),
-                  itemCount: viewModel.nthCustomExercises.length, // TODO: Ajustar
-                  itemBuilder: (context, index) => ExerciseTile(
-                    exerciseName: viewModel.nthCustomExercises[index].name, // TODO: Ajustar
-                    customIcon: CupertinoIcons.play_arrow_solid,
-                  ),
+                  itemCount: exercises.length,
+                  itemBuilder: (context, index) {
+                    final exercise = exercises[index];
+                    return Row(
+                      spacing: 8,
+                      children: [
+                        Expanded(
+                          child: ExerciseTile(
+                            exerciseName: exercise.name,
+                            customIcon: CupertinoIcons.play_arrow_solid,
+                          ),
+                        ),
+                        Checkbox(
+                          value: viewModel.customExercisesIds.contains(exercise.id),
+                          onChanged: (value) {
+                            viewModel.toggleCustomExerciseSelection(exercise.id);
+                          },
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
             CustomSolidButton(
               text: 'Próximo'.toUpperCase(),
-              onPressed: () => handleNextButton(context, viewModel),
+              onPressed: () => handleNextButton(context, viewModel, trainingId),
               gradientColors: AppGradients.greenGradient,
               textStyle: GoogleFonts.montserrat(
                 fontSize: 30,

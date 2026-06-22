@@ -17,11 +17,20 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   ExerciseQueued? get currentExercise => _currentExerciseIndex == null
       ? null
       : _queuedExercises[_currentExerciseIndex ?? 0];
+  final List<int> _customExercisesIds = [];
+  List<int> get customExercisesIds => _customExercisesIds;
+  final List<ExerciseQueued> _queuedCustomExercises = [];
+  List<ExerciseQueued> get queuedCustomExercises => _queuedCustomExercises;
+  ExerciseQueued? get currentCustomExercise => _currentExerciseIndex == null
+      ? null
+      : _queuedCustomExercises[_currentExerciseIndex ?? 0];
 
   final PhysicalExercisesService _physicalExercisesService;
-  List<Exercise> _nthCustomExercises = [];
-  List<Exercise> get nthCustomExercises => _nthCustomExercises;
-  int _indexCustomTraining = 0;
+  
+  // Cache para armazenar os exercícios de cada categoria de forma independente
+  final Map<int, List<Exercise>> _customExercisesCache = {};
+  List<Exercise> getExercisesForIndex(int index) => _customExercisesCache[index] ?? [];
+  
   final int _categoriesCount = CustomType.values.length;
   int get categoriesCount => _categoriesCount;
 
@@ -140,31 +149,56 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   void handleStartCustomExercisesSelection(BuildContext context) async {
     try {
       var currentPath = RouterHelper.getUriFromContext(context);
-      _indexCustomTraining = 0;
-      _nthCustomExercises = await _physicalExercisesService.getCustomExercisesFromTraining(TrainingType.custom, _currentDifficulty ?? ExerciseDifficulty.easy, _indexCustomTraining);
-      context.push('$currentPath/$_indexCustomTraining');
+      int startIndex = 0;
+      
+      _customExercisesCache[startIndex] = await _physicalExercisesService.getCustomExercisesFromTraining(
+          TrainingType.custom, 
+          _currentDifficulty ?? ExerciseDifficulty.easy, 
+          startIndex,
+      );
+      
+      notifyListeners();
+      context.push('$currentPath/$startIndex');
     } catch (e) {
       log('Error fetching trainings: $e');
     }
   }
 
-  void handleUpdateIndexCustomTraining(BuildContext context) async {
-    _indexCustomTraining++;
-    if (_indexCustomTraining == _categoriesCount) {
-      // TODO: implementar
+  void handleUpdateIndexCustomTraining(BuildContext context, int currentIndex) async {
+    int nextIndex = currentIndex + 1;
+    if (nextIndex == _categoriesCount) {
+      // TODO: implementar finalização
+      log('_customExercisesIds: $_customExercisesIds');
     } else {
-      _nthCustomExercises = await _physicalExercisesService.getCustomExercisesFromTraining(TrainingType.custom, _currentDifficulty ?? ExerciseDifficulty.easy, _indexCustomTraining);
-      context.push(getCustomExerciseRoute(context));
+      try {
+        if (!_customExercisesCache.containsKey(nextIndex)) {
+          _customExercisesCache[nextIndex] = await _physicalExercisesService.getCustomExercisesFromTraining(
+              TrainingType.custom, 
+              _currentDifficulty ?? ExerciseDifficulty.easy, 
+              nextIndex,
+          );
+        }
+        
+        notifyListeners();
+        
+        var currentPath = RouterHelper.getUriFromContext(context);
+        var currentPathSegments = currentPath.pathSegments;
+        var cleanedPath = '/${currentPathSegments.sublist(0, currentPathSegments.length - 1).join('/')}';
+
+        context.push('$cleanedPath/$nextIndex');
+      } catch (e) {
+        log('Error fetching next category: $e');
+      }
     }
   }
 
-  String getCustomExerciseRoute(BuildContext context) {
-    var currentPath = RouterHelper.getUriFromContext(context);
-    var currentPathSegments = currentPath.pathSegments;
-    var cleanedPath =
-      '/${currentPathSegments.sublist(0, currentPathSegments.length - 1).join('/')}';
-
-    return '$cleanedPath/$_indexCustomTraining';
+  void toggleCustomExerciseSelection(int id) {
+    if (_customExercisesIds.contains(id)) {
+      _customExercisesIds.remove(id);
+    } else {
+      _customExercisesIds.add(id);
+    }
+    notifyListeners();
   }
 
   String getExerciseRoute(BuildContext context) {
