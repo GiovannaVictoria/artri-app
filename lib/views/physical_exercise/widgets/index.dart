@@ -9,3 +9,4 @@ export 'exercise_set_properties.dart';
 export 'orientations_dialog.dart';
 export 'level_selector_dialog.dart';
 export 'custom_exercise_routine_overview.dart';
+export 'custom_exercise_selection.dart';

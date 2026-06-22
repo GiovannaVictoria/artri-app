@@ -99,6 +99,12 @@ class PhysicalExerciseRoutes implements RoutesSession {
               path: 'custom/:difficulty',
               builder: (context, state) =>
                   const CustomExerciseRoutineOverview(),
+              routes: [
+                GoRoute(
+                  path: ':trainingId',
+                  builder: (context, state) => const CustomExerciseSelection(),
+                ),
+              ],
             ),
           ],
         ),

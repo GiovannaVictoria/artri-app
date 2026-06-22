@@ -19,6 +19,11 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
       : _queuedExercises[_currentExerciseIndex ?? 0];
 
   final PhysicalExercisesService _physicalExercisesService;
+  List<Exercise> _nthCustomExercises = [];
+  List<Exercise> get nthCustomExercises => _nthCustomExercises;
+  int _indexCustomTraining = 0;
+  final int _categoriesCount = CustomType.values.length;
+  int get categoriesCount => _categoriesCount;
 
   PhysicalExercisesViewModel(this._physicalExercisesService);
 
@@ -54,11 +59,6 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
 
     var currentPath = RouterHelper.getUriFromContext(context);
 
-    if (_currentTrainingType == TrainingType.custom) {
-      context.push('$currentPath/${difficulty.toString()}');
-      return;
-    }
-
     try {
       var exercises = await _physicalExercisesService.getExercisesFromTraining(
         _currentTrainingType!,
@@ -70,8 +70,6 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
       context.push('$currentPath/${difficulty.toString()}');
     } catch (e) {
       log('Error fetching exercises: $e');
-      // Mesmo com erro no servidor, vamos para a tela para você conseguir visualizar seu layout
-      context.push('$currentPath/${difficulty.toString()}'); // TODO: remover
     }
   }
 
@@ -137,6 +135,36 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
 
     currentExercise!.markAsCompleted();
     handleNextExercise(context);
+  }
+
+  void handleStartCustomExercisesSelection(BuildContext context) async {
+    try {
+      var currentPath = RouterHelper.getUriFromContext(context);
+      _indexCustomTraining = 0;
+      _nthCustomExercises = await _physicalExercisesService.getCustomExercisesFromTraining(TrainingType.custom, _currentDifficulty ?? ExerciseDifficulty.easy, _indexCustomTraining);
+      context.push('$currentPath/$_indexCustomTraining');
+    } catch (e) {
+      log('Error fetching trainings: $e');
+    }
+  }
+
+  void handleUpdateIndexCustomTraining(BuildContext context) async {
+    _indexCustomTraining++;
+    if (_indexCustomTraining == _categoriesCount) {
+      // TODO: implementar
+    } else {
+      _nthCustomExercises = await _physicalExercisesService.getCustomExercisesFromTraining(TrainingType.custom, _currentDifficulty ?? ExerciseDifficulty.easy, _indexCustomTraining);
+      context.push(getCustomExerciseRoute(context));
+    }
+  }
+
+  String getCustomExerciseRoute(BuildContext context) {
+    var currentPath = RouterHelper.getUriFromContext(context);
+    var currentPathSegments = currentPath.pathSegments;
+    var cleanedPath =
+      '/${currentPathSegments.sublist(0, currentPathSegments.length - 1).join('/')}';
+
+    return '$cleanedPath/$_indexCustomTraining';
   }
 
   String getExerciseRoute(BuildContext context) {

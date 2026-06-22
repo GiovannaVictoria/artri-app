@@ -41,4 +41,25 @@ class PhysicalExercisesService {
           exercises.where((e) => training.exercises.contains(e.id)).toList(),
     );
   }
+
+  Future<List<Exercise>> getCustomExercisesFromTraining(
+      TrainingType type,
+      ExerciseDifficulty difficulty,
+      int index,
+  ) async {
+    final allCustomTrainings = await getTrainings().then(
+        (trainings) => trainings.where(
+            (training) =>
+              training.name.startsWith(type.toString()) &&
+              training.difficulty == difficulty,
+        ),
+    );
+
+    final nthCustomTraining = allCustomTrainings.toList().elementAt(index);
+
+    return await getExercises().then(
+          (exercises) =>
+          exercises.where((e) => nthCustomTraining.exercises.contains(e.id)).toList(),
+    );
+  }
 }
