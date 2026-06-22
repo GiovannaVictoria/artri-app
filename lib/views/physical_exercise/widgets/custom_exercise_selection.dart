@@ -1,5 +1,4 @@
 import 'package:artriapp/utils/index.dart';
-import 'package:artriapp/utils/helpers/index.dart';
 import 'package:artriapp/views/physical_exercise/widgets/index.dart';
 import 'package:artriapp/views/widgets/index.dart';
 import 'package:artriapp/view_models/index.dart';
@@ -28,11 +27,9 @@ class _CustomExerciseSelectionState
 
   @override
   Widget build(BuildContext context) {
-    final String? trainingIdRaw = RouterHelper.getPathParameterFromContext(context, 'trainingId');
-    final int trainingId = int.tryParse(trainingIdRaw ?? '0') ?? 0;
-
     return Consumer<PhysicalExercisesViewModel>(
       builder: (context, viewModel, child) {
+        final trainingId = viewModel.getTrainingId(context);
         final exercises = viewModel.getExercisesForIndex(trainingId);
 
         return Column(

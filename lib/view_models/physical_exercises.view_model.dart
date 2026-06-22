@@ -24,6 +24,7 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   ExerciseQueued? get currentCustomExercise => _currentExerciseIndex == null
       ? null
       : _queuedCustomExercises[_currentExerciseIndex ?? 0];
+  int _trainingId = 0;
 
   final PhysicalExercisesService _physicalExercisesService;
   
@@ -96,6 +97,12 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
     _currentExerciseIndex = 0;
 
     return queue;
+  }
+
+  int getTrainingId(BuildContext context) {
+    String? trainingIdRaw = RouterHelper.getPathParameterFromContext(context, 'trainingId');
+    _trainingId = int.tryParse(trainingIdRaw ?? '0') ?? 0;
+    return _trainingId;
   }
 
   void handleNextExercise(BuildContext context) {
