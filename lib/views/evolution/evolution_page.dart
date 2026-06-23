@@ -173,15 +173,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
           ),
         if (showSleep)
           LineChartBarData(
-            spots: const [
-              FlSpot(0, 4), // (Dia, Nível de dor)
-              FlSpot(1, 5),
-              FlSpot(2, 7),
-              FlSpot(3, 8),
-              FlSpot(4, 6),
-              FlSpot(5, 2),
-              FlSpot(6, 3),
-            ],
+            spots: getSleepSpots(viewModel),
             isCurved: true, // Deixa a linha suave
             color: AppColors.yellow, // Vermelho para representar dor
             barWidth: 4,
@@ -207,6 +199,19 @@ class _EvolutionPageState extends State<EvolutionPage> {
     }
 
     return last7FatigueSpots;
+  }
+
+  List<FlSpot> getSleepSpots(EvolutionViewModel viewModel) {
+    List<int> allSleepLevels = viewModel.sleepLevels;
+    List<FlSpot> last7SleepSpots = [];
+    int spotIndex = 0;
+    int levelIndex = allSleepLevels.length >= 7 ? allSleepLevels.length - 7 : 0;
+
+    for (; levelIndex < allSleepLevels.length && spotIndex < 7; levelIndex++, spotIndex++) {
+      last7SleepSpots.add(FlSpot(spotIndex.toDouble(), allSleepLevels[levelIndex].toDouble()));
+    }
+
+    return last7SleepSpots;
   }
 
   // Títulos do Eixo X (Dias)
