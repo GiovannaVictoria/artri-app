@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:artriapp/utils/index.dart';
+
 class CustomSolidButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -41,8 +43,8 @@ class CustomSolidButton extends StatelessWidget {
             : null,
         borderRadius: BorderRadius.circular(borderRadius),
         color: isEnabled
-          ? Colors.grey.shade200
-          : !_hasGradient ? color ?? Colors.blue : null,
+          ? AppColors.grey
+          : !_hasGradient ? color ?? AppColors.darkBlue : null,
       ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -59,7 +61,7 @@ class CustomSolidButton extends StatelessWidget {
             text,
             style: textStyle ??
                 TextStyle(
-                  color: textColor ?? Colors.white,
+                  color: textColor ?? AppColors.neutral,
                   fontSize: fontSize,
                   fontWeight: FontWeight.w400,
                 ),

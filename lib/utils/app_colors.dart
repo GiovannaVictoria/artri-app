@@ -8,4 +8,7 @@ abstract class AppColors {
   static const Color neutral = Color(0xffefecea);
   static const Color darkGreenSurface = Color(0xffabd1c6);
   static const Color mediumGreen = Color(0xff04bf8a);
+  static const Color yellow = Color(0xffFFC107);
+  static const Color grey = Color(0xff808080);
+  static const Color red = Color(0xFFAE263D);
 }

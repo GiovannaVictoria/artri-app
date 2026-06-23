@@ -18,6 +18,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
   // Controle de qual métrica exibir para não poluir o gráfico
   bool showPain = true;
   bool showFatigue = false;
+  bool showSleep = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,17 +55,25 @@ class _EvolutionPageState extends State<EvolutionPage> {
                 FilterChip(
                   label: const Text('Dor'),
                   selected: showPain,
-                  selectedColor: const Color(0xFFAE263D).withOpacity(0.3),
-                  checkmarkColor: const Color(0xFFAE263D),
+                  selectedColor: AppColors.red.withValues(alpha: 0.3),
+                  checkmarkColor: AppColors.red,
                   onSelected: (val) => setState(() => showPain = val),
                 ),
                 const SizedBox(width: 12),
                 FilterChip(
                   label: const Text('Fadiga'),
                   selected: showFatigue,
-                  selectedColor: AppColors.darkGreen.withOpacity(0.3),
+                  selectedColor: AppColors.darkGreen.withValues(alpha: 0.3),
                   checkmarkColor: AppColors.darkGreen,
                   onSelected: (val) => setState(() => showFatigue = val),
+                ),
+                const SizedBox(width: 12),
+                FilterChip(
+                  label: const Text('Sono'),
+                  selected: showSleep,
+                  selectedColor: AppColors.yellow.withValues(alpha: 0.3),
+                  checkmarkColor: AppColors.yellow,
+                  onSelected: (val) => setState(() => showSleep = val),
                 ),
               ],
             ),
@@ -140,13 +149,13 @@ class _EvolutionPageState extends State<EvolutionPage> {
               FlSpot(6, 3),
             ],
             isCurved: true, // Deixa a linha suave
-            color: const Color(0xFFAE263D), // Vermelho para representar dor
+            color: AppColors.red, // Vermelho para representar dor
             barWidth: 4,
             isStrokeCapRound: true,
             dotData: const FlDotData(show: true),
             belowBarData: BarAreaData(
               show: true,
-              color: const Color(0xFFAE263D).withOpacity(0.15),
+              color: AppColors.red.withValues(alpha: 0.15),
             ),
           ),
         if (showFatigue)
@@ -159,7 +168,28 @@ class _EvolutionPageState extends State<EvolutionPage> {
             dotData: const FlDotData(show: true),
             belowBarData: BarAreaData(
               show: true,
-              color: AppColors.darkGreenSurface.withOpacity(0.3),
+              color: AppColors.darkGreenSurface.withValues(alpha: 0.3),
+            ),
+          ),
+        if (showSleep)
+          LineChartBarData(
+            spots: const [
+              FlSpot(0, 4), // (Dia, Nível de dor)
+              FlSpot(1, 5),
+              FlSpot(2, 7),
+              FlSpot(3, 8),
+              FlSpot(4, 6),
+              FlSpot(5, 2),
+              FlSpot(6, 3),
+            ],
+            isCurved: true, // Deixa a linha suave
+            color: AppColors.yellow, // Vermelho para representar dor
+            barWidth: 4,
+            isStrokeCapRound: true,
+            dotData: const FlDotData(show: true),
+            belowBarData: BarAreaData(
+              show: true,
+              color: AppColors.yellow.withValues(alpha: 0.15),
             ),
           ),
       ],
