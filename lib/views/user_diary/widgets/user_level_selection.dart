@@ -1,9 +1,11 @@
 import 'package:artriapp/utils/enums/index.dart';
 import 'package:artriapp/views/widgets/index.dart';
+import 'package:artriapp/view_models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class UserLevelSelection extends StatelessWidget {
   final String? title;
@@ -27,65 +29,72 @@ class UserLevelSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
+    return Consumer<EvolutionViewModel>(
+      builder: (context, viewModel, child) {
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            title != null
-                ? Row(
-                    spacing: 8,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+            Column(
+              children: [
+                title != null
+                    ? Row(
+                  spacing: 8,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SessionTitle(title: title!),
+                    tooltipMessage != null
+                        ? HintIndicatorTooltip(
+                      tooltipMessage: tooltipMessage!,
+                    )
+                        : Gap(0),
+                  ],
+                )
+                    : const Gap(0),
+                SizedBox(height: 16),
+                Text(
+                  description.toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 18,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 4),
+                CustomScaleSelectorWidget(
+                  onChanged: (value) {
+                    viewModel.setSelectedFatigueLevel(value);
+                    onLevelSelected?.call(value);
+                  },
+                  initialValue: selectedLevel,
+                ),
+              ],
+            ),
+            Builder(
+              builder: (context) {
+                if (showButtons) {
+                  return Column(
                     children: [
-                      SessionTitle(title: title!),
-                      tooltipMessage != null
-                          ? HintIndicatorTooltip(
-                              tooltipMessage: tooltipMessage!,
-                            )
-                          : Gap(0),
-                    ],
-                  )
-                : const Gap(0),
-            SizedBox(height: 16),
-            Text(
-              description.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: GoogleFonts.montserrat(
-                fontSize: 18,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(height: 4),
-            CustomScaleSelectorWidget(
-              onChanged: (value) {
-                onLevelSelected?.call(value);
-              },
-              initialValue: selectedLevel,
-            ),
-          ],
-        ),
-        Builder(
-          builder: (context) {
-            if (showButtons) {
-              return Column(
-                children: [
-                  Gap(32),
-                  ConfirmationButtons(
-                    onButtonClicked: (action) =>
+                      Gap(32),
+                      ConfirmationButtons(
+                        onButtonClicked: (action) =>
                         action == ConfirmationAction.canceled
                             ? context.pop()
-                            : null,
-                  ),
-                ],
-              );
-            }
-            return Gap(0);
-          },
-        ),
-      ],
+                            : viewModel.addFatigueLevel(viewModel.selectedFatigueLevel),
+                      ),
+                    ],
+                  );
+                }
+                return Gap(0);
+              },
+            ),
+          ],
+        );
+
+      },
     );
   }
 }

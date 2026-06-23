@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:artriapp/utils/index.dart';
+import 'package:artriapp/view_models/index.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class EvolutionPage extends StatefulWidget {
   const EvolutionPage({super.key});
@@ -17,66 +21,72 @@ class _EvolutionPageState extends State<EvolutionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(height: 16),
-        Text(
-          'SUA EVOLUÇÃO',
-          style: GoogleFonts.montserrat(
-            fontSize: 28,
-            color: AppColors.darkGreen,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Acompanhe seus sintomas dos últimos 7 dias',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.montserrat(
-            fontSize: 16,
-            color: Colors.black54,
-          ),
-        ),
-        const SizedBox(height: 24),
-        
-        // Filtros para o usuário escolher o que ver
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return Consumer<EvolutionViewModel>(
+      builder: (context, viewModel, child) {
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            FilterChip(
-              label: const Text('Dor'),
-              selected: showPain,
-              selectedColor: const Color(0xFFAE263D).withOpacity(0.3),
-              checkmarkColor: const Color(0xFFAE263D),
-              onSelected: (val) => setState(() => showPain = val),
+            const SizedBox(height: 16),
+            Text(
+              'SUA EVOLUÇÃO',
+              style: GoogleFonts.montserrat(
+                fontSize: 28,
+                color: AppColors.darkGreen,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(width: 12),
-            FilterChip(
-              label: const Text('Fadiga'),
-              selected: showFatigue,
-              selectedColor: AppColors.darkGreen.withOpacity(0.3),
-              checkmarkColor: AppColors.darkGreen,
-              onSelected: (val) => setState(() => showFatigue = val),
+            const SizedBox(height: 8),
+            Text(
+              'Acompanhe seus sintomas dos últimos 7 dias',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                fontSize: 16,
+                color: Colors.black54,
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Filtros para o usuário escolher o que ver
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FilterChip(
+                  label: const Text('Dor'),
+                  selected: showPain,
+                  selectedColor: const Color(0xFFAE263D).withOpacity(0.3),
+                  checkmarkColor: const Color(0xFFAE263D),
+                  onSelected: (val) => setState(() => showPain = val),
+                ),
+                const SizedBox(width: 12),
+                FilterChip(
+                  label: const Text('Fadiga'),
+                  selected: showFatigue,
+                  selectedColor: AppColors.darkGreen.withOpacity(0.3),
+                  checkmarkColor: AppColors.darkGreen,
+                  onSelected: (val) => setState(() => showFatigue = val),
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+
+            // O Gráfico usando fl_chart
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 24.0, left: 8.0, bottom: 24.0),
+                child: LineChart(
+                  _mainData(viewModel),
+                ),
+              ),
             ),
           ],
-        ),
-        const SizedBox(height: 32),
+        );
 
-        // O Gráfico usando fl_chart
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(right: 24.0, left: 8.0, bottom: 24.0),
-            child: LineChart(
-              _mainData(),
-            ),
-          ),
-        ),
-      ],
+      },
     );
   }
 
-  LineChartData _mainData() {
+  LineChartData _mainData(EvolutionViewModel viewModel) {
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -141,15 +151,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
           ),
         if (showFatigue)
           LineChartBarData(
-            spots: const [
-              FlSpot(0, 4),
-              FlSpot(1, 5),
-              FlSpot(2, 5),
-              FlSpot(3, 3),
-              FlSpot(4, 6),
-              FlSpot(5, 8),
-              FlSpot(6, 4),
-            ],
+            spots: getFatigueSpots(viewModel),
             isCurved: true,
             color: AppColors.darkGreen, // Cor do tema para fadiga
             barWidth: 4,
@@ -162,6 +164,19 @@ class _EvolutionPageState extends State<EvolutionPage> {
           ),
       ],
     );
+  }
+
+  List<FlSpot> getFatigueSpots(EvolutionViewModel viewModel) {
+    List<int> allFatigueLevels = viewModel.fatigueLevels;
+    List<FlSpot> last7FatigueSpots = [];
+    int spotIndex = 0;
+    int levelIndex = allFatigueLevels.length >= 7 ? allFatigueLevels.length - 7 : 0;
+
+    for (; levelIndex < allFatigueLevels.length && spotIndex < 7; levelIndex++, spotIndex++) {
+      last7FatigueSpots.add(FlSpot(spotIndex.toDouble(), allFatigueLevels[levelIndex].toDouble()));
+    }
+
+    return last7FatigueSpots;
   }
 
   // Títulos do Eixo X (Dias)

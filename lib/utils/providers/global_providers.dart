@@ -26,6 +26,9 @@ class GlobalProviders {
     ChangeNotifierProvider(
       create: (context) => RemedyViewModel(),
     ),
+    ChangeNotifierProvider(
+      create: (context) => EvolutionViewModel(),
+    ),
   ];
 
   static List<SingleChildWidget> getProviders() {
