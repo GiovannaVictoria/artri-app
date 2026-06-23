@@ -8,8 +8,10 @@ class EvolutionViewModel extends ChangeNotifier {
   final List<int> _fatigueLevels = [];
   List<int> get fatigueLevels => _fatigueLevels;
 
-  void addFatigueLevel(int newLevel) {
-    _fatigueLevels.add(newLevel);
+  void addFatigueLevel(int? newLevel) {
+    if (newLevel != null) {
+      _fatigueLevels.add(newLevel);
+    }
   }
 
   void setSelectedFatigueLevel(int level) {

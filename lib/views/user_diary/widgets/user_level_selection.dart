@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class UserLevelSelection extends StatelessWidget {
+class UserLevelSelection extends StatefulWidget {
   final String? title;
   final String description;
   final String? hintDescription;
@@ -28,6 +28,19 @@ class UserLevelSelection extends StatelessWidget {
   });
 
   @override
+  State<UserLevelSelection> createState() => _UserLevelSelection();
+}
+
+class _UserLevelSelection extends State<UserLevelSelection> {
+  int? _currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentValue = widget.selectedLevel;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<EvolutionViewModel>(
       builder: (context, viewModel, child) {
@@ -38,17 +51,17 @@ class UserLevelSelection extends StatelessWidget {
           children: [
             Column(
               children: [
-                title != null
+                widget.title != null
                     ? Row(
                   spacing: 8,
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SessionTitle(title: title!),
-                    tooltipMessage != null
+                    SessionTitle(title: widget.title!),
+                    widget.tooltipMessage != null
                         ? HintIndicatorTooltip(
-                      tooltipMessage: tooltipMessage!,
+                      tooltipMessage: widget.tooltipMessage!,
                     )
                         : Gap(0),
                   ],
@@ -56,7 +69,7 @@ class UserLevelSelection extends StatelessWidget {
                     : const Gap(0),
                 SizedBox(height: 16),
                 Text(
-                  description.toUpperCase(),
+                  widget.description.toUpperCase(),
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
                     fontSize: 18,
@@ -66,24 +79,29 @@ class UserLevelSelection extends StatelessWidget {
                 SizedBox(height: 4),
                 CustomScaleSelectorWidget(
                   onChanged: (value) {
-                    viewModel.setSelectedFatigueLevel(value);
-                    onLevelSelected?.call(value);
+                    setState(() {
+                      _currentValue = value;
+                    });
                   },
-                  initialValue: selectedLevel,
+                  initialValue: _currentValue,
                 ),
               ],
             ),
             Builder(
               builder: (context) {
-                if (showButtons) {
+                if (widget.showButtons) {
                   return Column(
                     children: [
                       Gap(32),
                       ConfirmationButtons(
-                        onButtonClicked: (action) =>
-                        action == ConfirmationAction.canceled
-                            ? context.pop()
-                            : viewModel.addFatigueLevel(viewModel.selectedFatigueLevel),
+                        isConfirmEnabled: _currentValue != null,
+                        onButtonClicked: (action) {
+                          if(action == ConfirmationAction.confirmed && _currentValue != null) {
+                            viewModel.addFatigueLevel(_currentValue);
+                            widget.onLevelSelected?.call(_currentValue!);
+                          }
+                          context.pop();
+                        },
                       ),
                     ],
                   );
