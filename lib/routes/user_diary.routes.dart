@@ -1,4 +1,5 @@
 import 'package:artriapp/models/index.dart';
+import 'package:artriapp/utils/enums/diary_options.dart';
 import 'package:artriapp/views/index.dart';
 import 'package:go_router/go_router.dart';
 
@@ -20,8 +21,8 @@ abstract class UserDiaryRoutes implements RoutesSession {
             GoRoute(
               path: 'fatigue-selection',
               pageBuilder: (context, state) => NoTransitionPage(
-                child: const UserLevelSelection(
-                  title: 'Fadiga',
+                child: UserLevelSelection(
+                  title: DiaryOptions.fatigue.toString(),
                   tooltipMessage:
                       'É um cansaço intenso e constante e falta de energia, que não melhora mesmo após descanso e pode atrapalhar nas atividades do dia a dia',
                   description: 'De 0 a 10, como esta seu nível de fadiga hoje?',
@@ -32,15 +33,15 @@ abstract class UserDiaryRoutes implements RoutesSession {
               path: 'pain-selection',
               pageBuilder: (context, state) => NoTransitionPage(
                 child: UserLevelSelectionWithOptions(
-                  title: 'Dor',
+                  title: DiaryOptions.pain.toString(),
                 ),
               ),
             ),
             GoRoute(
               path: 'sleep-selection',
               pageBuilder: (context, state) => NoTransitionPage(
-                child: const UserLevelSelection(
-                  title: 'Sono',
+                child: UserLevelSelection(
+                  title: DiaryOptions.sleep.toString(),
                   description: 'De 0 a 10, como esta seu nível de sono hoje?',
                 ),
               ),
@@ -49,7 +50,7 @@ abstract class UserDiaryRoutes implements RoutesSession {
               path: 'swelling-selection',
               pageBuilder: (context, state) => NoTransitionPage(
                 child: UserLevelSelectionWithOptions(
-                  title: 'Inchaço',
+                  title: DiaryOptions.swelling.toString(),
                   tooltipMessage:
                       'Inchaço é quando uma parte do corpo parece maior ou mais “cheia” do que o normal, como se estivesse acumulando líquido ou inflamada. A região inchada pode ficar mais dura, quente, avermelhada ou sensível ao toque.',
                 ),

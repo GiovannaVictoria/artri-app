@@ -97,7 +97,9 @@ class _UserLevelSelection extends State<UserLevelSelection> {
                         isConfirmEnabled: _currentValue != null,
                         onButtonClicked: (action) {
                           if(action == ConfirmationAction.confirmed && _currentValue != null) {
-                            viewModel.addFatigueLevel(_currentValue);
+                            if (widget.title == DiaryOptions.fatigue.toString()) {
+                              viewModel.addFatigueLevel(_currentValue);
+                            }
                             widget.onLevelSelected?.call(_currentValue!);
                           }
                           context.pop();
