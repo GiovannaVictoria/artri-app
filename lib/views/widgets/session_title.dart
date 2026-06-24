@@ -2,7 +2,6 @@ import 'package:artriapp/utils/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// TODO: ajustar o tamanho do título das sessões de exercícios (não sei se é aqui mesmo)
 class SessionTitle extends StatelessWidget {
   final String title;
   final String? subtitle;

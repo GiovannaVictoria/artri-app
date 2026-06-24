@@ -82,6 +82,7 @@ class _UserLevelSelection extends State<UserLevelSelection> {
                     setState(() {
                       _currentValue = value;
                     });
+                    widget.onLevelSelected?.call(value);
                   },
                   initialValue: _currentValue,
                 ),
