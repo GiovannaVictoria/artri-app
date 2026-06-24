@@ -28,7 +28,7 @@ class UserDiaryPage extends StatelessWidget {
           children: [
             SvgPicture.asset(
               'assets/images/logo-ArtriApp-v2.svg',
-              width: min(180, screenWidth * 0.50),
+              width: min(180, screenWidth * 0.25),
             ),
             const Gap(24),
             Text(

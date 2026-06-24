@@ -1,9 +1,11 @@
 import 'package:artriapp/utils/enums/index.dart';
 import 'package:artriapp/views/user_diary/widgets/index.dart';
 import 'package:artriapp/views/widgets/index.dart';
+import 'package:artriapp/utils/index.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class UserLevelSelectionWithOptions extends StatefulWidget {
   final String title;
@@ -23,21 +25,16 @@ class UserLevelSelectionWithOptions extends StatefulWidget {
 class _UserLevelSelectionWithOptionsState
     extends State<UserLevelSelectionWithOptions> {
   Map<String, int?> selectedInfos = <String, int?>{};
+  String? _selectedOption;
 
-  void onCheckBoxChanged(List<String> options) {
-    for (String option in options) {
-      if (selectedInfos.containsKey(option)) continue;
-
-      selectedInfos[option] = -1;
-    }
-
-    List<String> selectedInfosKeys = selectedInfos.keys.toList();
-
-    for (String key in selectedInfosKeys) {
-      if (options.contains(key)) continue;
-
-      selectedInfos.remove(key);
-    }
+  void handleRadioChange(String? value) {
+    setState(() {
+      _selectedOption = value;
+      selectedInfos.clear();
+      if (value != null) {
+        selectedInfos[value] = -1;
+      }
+    });
   }
 
   Widget renderUserSelection(BuildContext context, int idx) {
@@ -47,7 +44,9 @@ class _UserLevelSelectionWithOptionsState
       key: Key('$option - ${selectedInfos[option]}'),
       description: getUserSelectionDescription(option),
       showButtons: false,
-      onLevelSelected: (value) => selectedInfos[option] = value,
+      onLevelSelected: (value) => setState(() {
+        selectedInfos[option] = value;
+      }),
       selectedLevel: selectedInfos[option] == -1 ? null : selectedInfos[option],
     );
   }
@@ -55,9 +54,9 @@ class _UserLevelSelectionWithOptionsState
   String getUserSelectionDescription(String option) {
     switch (widget.title.toLowerCase()) {
       case 'inchaço':
-        return 'De 0 a 10, qual nível de ${widget.title} ${getStringArticle(option)} $option';
+        return 'De 0 a 10, qual o nível de ${widget.title} ${getStringArticle(option)} $option?';
       case 'dor':
-        return 'De 0 a 10, qual nível da sua ${widget.title} ${getStringArticle(option)} $option';
+        return 'De 0 a 10, qual o nível da sua ${widget.title} ${getStringArticle(option)} $option?';
       default:
         return 'Option not defined';
     }
@@ -93,29 +92,66 @@ class _UserLevelSelectionWithOptionsState
               children: [
                 SessionTitle(
                   title: widget.title,
+                  size: 24,
                 ),
                 widget.tooltipMessage != null
                     ? HintIndicatorTooltip(
                         tooltipMessage: widget.tooltipMessage!,
                       )
-                    : Gap(0),
+                    : const Gap(0),
               ],
             ),
-            CheckboxGroup(
-              onChanged: (list) => setState(() {
-                onCheckBoxChanged(list);
-              }),
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemCount: selectedInfos.keys.length,
-              itemBuilder: (context, idx) => renderUserSelection(context, idx),
-            ),
-            Gap(32),
-            ConfirmationButtons(
-              onButtonClicked: (action) =>
-                  action == ConfirmationAction.canceled ? context.pop() : null,
+            Column(
+              children: [
+                GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  childAspectRatio: 4,
+                  children: BodyOptions.values.map((option) {
+                    return GestureDetector(
+                      onTap: () => handleRadioChange(option.toString()),
+                      child: Row(
+                        children: [
+                          Radio<String>(
+                            value: option.toString(),
+                            groupValue: _selectedOption,
+                            onChanged: handleRadioChange,
+                            activeColor: Colors.green,
+                          ),
+                          Flexible(
+                            child: Text(
+                              option.toString(),
+                              style: GoogleFonts.montserrat(
+                                color: AppColors.black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: selectedInfos.keys.length,
+                  itemBuilder: (context, idx) =>
+                      renderUserSelection(context, idx),
+                ),
+                const Gap(32),
+                ConfirmationButtons(
+                  isConfirmEnabled: _selectedOption != null &&
+                      selectedInfos[_selectedOption] != -1,
+                  onButtonClicked: (action) {
+                    if (action == ConfirmationAction.confirmed) {
+                      // TODO: Implementar salvamento no ViewModel
+                    }
+                    context.pop();
+                  },
+                ),
+              ],
             ),
           ],
         ),

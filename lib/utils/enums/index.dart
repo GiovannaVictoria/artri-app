@@ -8,3 +8,4 @@ export 'training_type_enum.dart';
 export 'answer_type_enum.dart';
 export 'custom_type_enum.dart';
 export 'diary_options.dart';
+export 'body_options.dart';
