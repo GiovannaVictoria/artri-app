@@ -21,6 +21,7 @@ class EvolutionViewModel extends ChangeNotifier {
 
   EvolutionViewModel() {
     loadPainData();
+    loadFatigueData();
   }
 
   Future<void> loadPainData() async {
@@ -36,11 +37,24 @@ class EvolutionViewModel extends ChangeNotifier {
     }
   }
 
-  void addFatigueLevel(int? newLevel) {
-    if (newLevel != null) {
-      _fatigueLevels.add(newLevel);
+  Future<void> loadFatigueData() async {
+    try {
+      final fatigueData = await _diaryService.getFatigueLevels();
+
+      _fatigueLevels.clear();
+      _fatigueLevels.addAll(fatigueData);
+
+      notifyListeners();
+    } catch (e) {
+      log('Erro ao carregar dados: $e');
     }
   }
+
+  // void addFatigueLevel(int? newLevel) {
+  //   if (newLevel != null) {
+  //     _fatigueLevels.add(newLevel);
+  //   }
+  // }
 
   void addSleepLevel(int? newLevel) {
     if (newLevel != null) {
@@ -68,6 +82,18 @@ class EvolutionViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> addFatigueLevel(int? newLevel, String? description) async {
+    try {
+      if (newLevel == null) return;
+      description ??= 'novo nível de fadiga';
+      await _diaryService.addFatigueLevel(newLevel, description);
+      _fatigueLevels.add(newLevel);
+      notifyListeners();
+    } catch (e) {
+      log('Erro ao salvar: $e');
+    }
+  }
+
   List<FlSpot> getLast7PainLevels() {
     List<FlSpot> last7PainSpots = [];
     int spotIndex = 0;
@@ -78,5 +104,17 @@ class EvolutionViewModel extends ChangeNotifier {
     }
 
     return last7PainSpots;
+  }
+
+  List<FlSpot> getLast7FatigueLevels() {
+    List<FlSpot> last7FatigueSpots = [];
+    int spotIndex = 0;
+    int levelIndex = _fatigueLevels.length >= 7 ? _fatigueLevels.length - 7 : 0;
+
+    for (; levelIndex < _fatigueLevels.length && spotIndex < 7; levelIndex++, spotIndex++) {
+      last7FatigueSpots.add(FlSpot(spotIndex.toDouble(), _fatigueLevels[levelIndex].toDouble()));
+    }
+
+    return last7FatigueSpots;
   }
 }
