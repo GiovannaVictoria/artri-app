@@ -153,6 +153,8 @@ class _UserLevelSelectionWithOptionsState
                         if (action == ConfirmationAction.confirmed) {
                           if (widget.title == DiaryOptions.pain.toString()) {
                             viewModel.addPainLevel(_selectedOption, selectedInfos[_selectedOption]);
+                          } else if (widget.title == DiaryOptions.swelling.toString()) {
+                            viewModel.addSwellingLevel(_selectedOption, selectedInfos[_selectedOption]);
                           }
                         }
                         context.pop();

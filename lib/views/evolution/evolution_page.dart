@@ -19,6 +19,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
   bool showPain = true;
   bool showFatigue = false;
   bool showSleep = false;
+  bool showSwelling = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
             Text(
               'SUA EVOLUÇÃO',
               style: GoogleFonts.montserrat(
-                fontSize: 28,
+                fontSize: 24,
                 color: AppColors.darkGreen,
                 fontWeight: FontWeight.bold,
               ),
@@ -42,7 +43,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
               'Acompanhe seus sintomas dos últimos 7 dias',
               textAlign: TextAlign.center,
               style: GoogleFonts.montserrat(
-                fontSize: 16,
+                fontSize: 12,
                 color: Colors.black54,
               ),
             ),
@@ -56,7 +57,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
                   label: const Text('Dor'),
                   selected: showPain,
                   selectedColor: AppColors.red.withValues(alpha: 0.3),
-                  checkmarkColor: AppColors.red,
+                  showCheckmark: false,
                   onSelected: (val) => setState(() => showPain = val),
                 ),
                 const SizedBox(width: 12),
@@ -64,7 +65,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
                   label: const Text('Fadiga'),
                   selected: showFatigue,
                   selectedColor: AppColors.darkGreen.withValues(alpha: 0.3),
-                  checkmarkColor: AppColors.darkGreen,
+                  showCheckmark: false,
                   onSelected: (val) => setState(() => showFatigue = val),
                 ),
                 const SizedBox(width: 12),
@@ -72,8 +73,16 @@ class _EvolutionPageState extends State<EvolutionPage> {
                   label: const Text('Sono'),
                   selected: showSleep,
                   selectedColor: AppColors.yellow.withValues(alpha: 0.3),
-                  checkmarkColor: AppColors.yellow,
+                  showCheckmark: false,
                   onSelected: (val) => setState(() => showSleep = val),
+                ),
+                const SizedBox(width: 12),
+                FilterChip(
+                  label: const Text('Inchaço'),
+                  selected: showSwelling,
+                  selectedColor: AppColors.purple.withValues(alpha: 0.3),
+                  showCheckmark: false,
+                  onSelected: (val) => setState(() => showSwelling = val),
                 ),
               ],
             ),
@@ -176,6 +185,19 @@ class _EvolutionPageState extends State<EvolutionPage> {
               color: AppColors.yellow.withValues(alpha: 0.15),
             ),
           ),
+        if (showSwelling)
+          LineChartBarData(
+            spots: getSwellingSpots(viewModel),
+            isCurved: true, // Deixa a linha suave
+            color: AppColors.purple, // Vermelho para representar dor
+            barWidth: 4,
+            isStrokeCapRound: true,
+            dotData: const FlDotData(show: true),
+            belowBarData: BarAreaData(
+              show: true,
+              color: AppColors.purple.withValues(alpha: 0.15),
+            ),
+          ),
       ],
     );
   }
@@ -217,6 +239,19 @@ class _EvolutionPageState extends State<EvolutionPage> {
     }
 
     return last7PainSpots;
+  }
+
+  List<FlSpot> getSwellingSpots(EvolutionViewModel viewModel) {
+    List<int> allSwellingLevels = viewModel.swellingLevelsOnlyNumbers;
+    List<FlSpot> last7SwellingSpots = [];
+    int spotIndex = 0;
+    int levelIndex = allSwellingLevels.length >= 7 ? allSwellingLevels.length - 7 : 0;
+
+    for (; levelIndex < allSwellingLevels.length && spotIndex < 7; levelIndex++, spotIndex++) {
+      last7SwellingSpots.add(FlSpot(spotIndex.toDouble(), allSwellingLevels[levelIndex].toDouble()));
+    }
+
+    return last7SwellingSpots;
   }
 
   // Títulos do Eixo X (Dias)

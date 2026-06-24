@@ -12,6 +12,9 @@ class EvolutionViewModel extends ChangeNotifier {
   final List<int> _painLevelsOnlyNumbers = [];
   List<int> get painLevelsOnlyNumbers => _painLevelsOnlyNumbers;
 
+  final List<int> _swellingLevelsOnlyNumbers = [];
+  List<int> get swellingLevelsOnlyNumbers => _swellingLevelsOnlyNumbers;
+
   void addFatigueLevel(int? newLevel) {
     if (newLevel != null) {
       _fatigueLevels.add(newLevel);
@@ -28,6 +31,14 @@ class EvolutionViewModel extends ChangeNotifier {
     bool bodyOptionExists = BodyOptions.values.any((value) => value.toString() == bodyOption);
     if (bodyOptionExists && newLevel != null) {
       _painLevelsOnlyNumbers.add(newLevel);
+      notifyListeners();
+    }
+  }
+
+  void addSwellingLevel(String? bodyOption, int? newLevel) {
+    bool bodyOptionExists = BodyOptions.values.any((value) => value.toString() == bodyOption);
+    if (bodyOptionExists && newLevel != null) {
+      _swellingLevelsOnlyNumbers.add(newLevel);
       notifyListeners();
     }
   }
