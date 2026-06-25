@@ -23,6 +23,7 @@ class EvolutionViewModel extends ChangeNotifier {
     loadPainData();
     loadFatigueData();
     loadSleepData();
+    loadSwellingData();
   }
 
   Future<void> loadPainData() async {
@@ -64,11 +65,16 @@ class EvolutionViewModel extends ChangeNotifier {
     }
   }
 
-  void addSwellingLevel(String? bodyOption, int? newLevel) {
-    bool bodyOptionExists = BodyOptions.values.any((value) => value.toString() == bodyOption);
-    if (bodyOptionExists && newLevel != null) {
-      _swellingLevelsOnlyNumbers.add(newLevel);
+  Future<void> loadSwellingData() async {
+    try {
+      final swellingData = await _diaryService.getSwellingLevels();
+
+      _swellingLevelsOnlyNumbers.clear();
+      _swellingLevelsOnlyNumbers.addAll(swellingData);
+
       notifyListeners();
+    } catch (e) {
+      log('Erro ao carregar dados: $e');
     }
   }
 
@@ -102,6 +108,18 @@ class EvolutionViewModel extends ChangeNotifier {
       duration ??= -1;
       await _diaryService.addSleepLevel(newLevel, duration);
       _sleepLevels.add(newLevel);
+      notifyListeners();
+    } catch (e) {
+      log('Erro ao salvar: $e');
+    }
+  }
+
+  Future<void> addSwellingLevel(String? bodyOption, int? newLevel) async {
+    try {
+      bool bodyOptionExists = BodyOptions.values.any((value) => value.toString() == bodyOption);
+      if (bodyOption == null || newLevel == null || !bodyOptionExists) return;
+      await _diaryService.addSwellingLevel(bodyOption, newLevel);
+      _swellingLevelsOnlyNumbers.add(newLevel);
       notifyListeners();
     } catch (e) {
       log('Erro ao salvar: $e');
@@ -142,5 +160,17 @@ class EvolutionViewModel extends ChangeNotifier {
     }
 
     return last7SleepSpots;
+  }
+
+  List<FlSpot> getLast7SwellingLevels() {
+    List<FlSpot> last7SwellingSpots = [];
+    int spotIndex = 0;
+    int levelIndex = _swellingLevelsOnlyNumbers.length >= 7 ? _swellingLevelsOnlyNumbers.length - 7 : 0;
+
+    for (; levelIndex < _swellingLevelsOnlyNumbers.length && spotIndex < 7; levelIndex++, spotIndex++) {
+      last7SwellingSpots.add(FlSpot(spotIndex.toDouble(), _swellingLevelsOnlyNumbers[levelIndex].toDouble()));
+    }
+
+    return last7SwellingSpots;
   }
 }

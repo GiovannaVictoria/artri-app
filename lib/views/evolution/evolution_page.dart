@@ -185,7 +185,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
           ),
         if (showSwelling)
           LineChartBarData(
-            spots: getSwellingSpots(viewModel),
+            spots: viewModel.getLast7SwellingLevels(),
             isCurved: true, // Deixa a linha suave
             color: AppColors.purple, // Vermelho para representar dor
             barWidth: 4,
@@ -198,19 +198,6 @@ class _EvolutionPageState extends State<EvolutionPage> {
           ),
       ],
     );
-  }
-
-  List<FlSpot> getSwellingSpots(EvolutionViewModel viewModel) {
-    List<int> allSwellingLevels = viewModel.swellingLevelsOnlyNumbers;
-    List<FlSpot> last7SwellingSpots = [];
-    int spotIndex = 0;
-    int levelIndex = allSwellingLevels.length >= 7 ? allSwellingLevels.length - 7 : 0;
-
-    for (; levelIndex < allSwellingLevels.length && spotIndex < 7; levelIndex++, spotIndex++) {
-      last7SwellingSpots.add(FlSpot(spotIndex.toDouble(), allSwellingLevels[levelIndex].toDouble()));
-    }
-
-    return last7SwellingSpots;
   }
 
   // Títulos do Eixo X (Dias)
