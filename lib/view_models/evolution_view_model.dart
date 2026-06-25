@@ -50,12 +50,6 @@ class EvolutionViewModel extends ChangeNotifier {
     }
   }
 
-  // void addFatigueLevel(int? newLevel) {
-  //   if (newLevel != null) {
-  //     _fatigueLevels.add(newLevel);
-  //   }
-  // }
-
   void addSleepLevel(int? newLevel) {
     if (newLevel != null) {
       _sleepLevels.add(newLevel);
