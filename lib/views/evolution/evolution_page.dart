@@ -172,7 +172,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
           ),
         if (showSleep)
           LineChartBarData(
-            spots: getSleepSpots(viewModel),
+            spots: viewModel.getLast7SleepLevels(),
             isCurved: true, // Deixa a linha suave
             color: AppColors.yellow, // Vermelho para representar dor
             barWidth: 4,
@@ -198,19 +198,6 @@ class _EvolutionPageState extends State<EvolutionPage> {
           ),
       ],
     );
-  }
-
-  List<FlSpot> getSleepSpots(EvolutionViewModel viewModel) {
-    List<int> allSleepLevels = viewModel.sleepLevels;
-    List<FlSpot> last7SleepSpots = [];
-    int spotIndex = 0;
-    int levelIndex = allSleepLevels.length >= 7 ? allSleepLevels.length - 7 : 0;
-
-    for (; levelIndex < allSleepLevels.length && spotIndex < 7; levelIndex++, spotIndex++) {
-      last7SleepSpots.add(FlSpot(spotIndex.toDouble(), allSleepLevels[levelIndex].toDouble()));
-    }
-
-    return last7SleepSpots;
   }
 
   List<FlSpot> getSwellingSpots(EvolutionViewModel viewModel) {

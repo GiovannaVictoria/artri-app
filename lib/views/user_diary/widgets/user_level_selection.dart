@@ -101,7 +101,7 @@ class _UserLevelSelection extends State<UserLevelSelection> {
                             if (widget.title == DiaryOptions.fatigue.toString()) {
                               viewModel.addFatigueLevel(_currentValue, null);
                             } else if (widget.title == DiaryOptions.sleep.toString()) {
-                              viewModel.addSleepLevel(_currentValue);
+                              viewModel.addSleepLevel(_currentValue, null);
                             }
                             widget.onLevelSelected?.call(_currentValue!);
                           }

@@ -22,6 +22,7 @@ class EvolutionViewModel extends ChangeNotifier {
   EvolutionViewModel() {
     loadPainData();
     loadFatigueData();
+    loadSleepData();
   }
 
   Future<void> loadPainData() async {
@@ -50,9 +51,16 @@ class EvolutionViewModel extends ChangeNotifier {
     }
   }
 
-  void addSleepLevel(int? newLevel) {
-    if (newLevel != null) {
-      _sleepLevels.add(newLevel);
+  Future<void> loadSleepData() async {
+    try {
+      final sleepData = await _diaryService.getSleepLevels();
+
+      _sleepLevels.clear();
+      _sleepLevels.addAll(sleepData);
+
+      notifyListeners();
+    } catch (e) {
+      log('Erro ao carregar dados: $e');
     }
   }
 
@@ -88,6 +96,18 @@ class EvolutionViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> addSleepLevel(int? newLevel, int? duration) async {
+    try {
+      if (newLevel == null) return;
+      duration ??= -1;
+      await _diaryService.addSleepLevel(newLevel, duration);
+      _sleepLevels.add(newLevel);
+      notifyListeners();
+    } catch (e) {
+      log('Erro ao salvar: $e');
+    }
+  }
+
   List<FlSpot> getLast7PainLevels() {
     List<FlSpot> last7PainSpots = [];
     int spotIndex = 0;
@@ -110,5 +130,17 @@ class EvolutionViewModel extends ChangeNotifier {
     }
 
     return last7FatigueSpots;
+  }
+
+  List<FlSpot> getLast7SleepLevels() {
+    List<FlSpot> last7SleepSpots = [];
+    int spotIndex = 0;
+    int levelIndex = _sleepLevels.length >= 7 ? _sleepLevels.length - 7 : 0;
+
+    for (; levelIndex < _sleepLevels.length && spotIndex < 7; levelIndex++, spotIndex++) {
+      last7SleepSpots.add(FlSpot(spotIndex.toDouble(), _sleepLevels[levelIndex].toDouble()));
+    }
+
+    return last7SleepSpots;
   }
 }

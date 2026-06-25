@@ -49,6 +49,25 @@ class UserDiaryService {
     throw Exception('Erro ao buscar níveis de fadiga');
   }
 
+  Future<List<int>> getSleepLevels() async {
+    final String? token = await _tokenService.getToken(SecurityToken.accessToken);
+
+    final response = await http.get(
+      Uri.parse('$_baseUrl/daily-sleep-reports/'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((item) => item['sleep_quality'] as int).toList();
+    }
+
+    throw Exception('Erro ao buscar níveis de sono');
+  }
+
   Future<void> addPainLevel(String bodyOption, int level) async {
     final String? token = await _tokenService.getToken(SecurityToken.accessToken);
 
@@ -88,6 +107,27 @@ class UserDiaryService {
 
     if (response.statusCode != 201) {
       throw Exception('Erro ao salvar nível de fadiga: ${response.body}');
+    }
+  }
+
+  Future<void> addSleepLevel(int level, int duration) async {
+    final String? token = await _tokenService.getToken(SecurityToken.accessToken);
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/daily-sleep-reports/'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'date': DateTime.now().toIso8601String().split('T')[0], // Formato AAAA-MM-DD
+        'sleep_quality': level,
+        'sleep_duration': duration,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Erro ao salvar nível de sono: ${response.body}');
     }
   }
 }
