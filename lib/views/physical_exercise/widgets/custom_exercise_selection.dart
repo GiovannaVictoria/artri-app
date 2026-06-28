@@ -78,9 +78,10 @@ class _CustomExerciseSelectionState
                                   ),
                                 ),
                                 Checkbox(
-                                  value: viewModel.customExercisesIds.contains(exercise.id),
+                                  // value: viewModel.getMobilityIds(0).contains(exercise.id),
+                                  value: viewModel.customMobilityExerciseIds[0]?.contains(exercise.id),
                                   onChanged: (value) {
-                                    viewModel.toggleCustomExerciseSelection(exercise.id);
+                                    viewModel.toggleCustomMobilityExerciseSelection(0, exercise.id);
                                   },
                                 ),
                               ],
@@ -114,9 +115,10 @@ class _CustomExerciseSelectionState
                                   ),
                                 ),
                                 Checkbox(
-                                  value: viewModel.customExercisesIds.contains(exercise.id),
+                                  // value: viewModel.getMobilityIds(1).contains(exercise.id),
+                                  value: viewModel.customMobilityExerciseIds[1]?.contains(exercise.id),
                                   onChanged: (value) {
-                                    viewModel.toggleCustomExerciseSelection(exercise.id);
+                                    viewModel.toggleCustomMobilityExerciseSelection(1, exercise.id);
                                   },
                                 ),
                               ],
@@ -150,9 +152,10 @@ class _CustomExerciseSelectionState
                                   ),
                                 ),
                                 Checkbox(
-                                  value: viewModel.customExercisesIds.contains(exercise.id),
+                                  // value: viewModel.getMobilityIds(2).contains(exercise.id),
+                                  value: viewModel.customMobilityExerciseIds[2]?.contains(exercise.id),
                                   onChanged: (value) {
-                                    viewModel.toggleCustomExerciseSelection(exercise.id);
+                                    viewModel.toggleCustomMobilityExerciseSelection(2, exercise.id);
                                   },
                                 ),
                               ],
@@ -166,7 +169,10 @@ class _CustomExerciseSelectionState
               ),
               CustomSolidButton(
                 text: 'Próximo'.toUpperCase(),
-                onPressed: selectionNumberRequired == viewModel.customExercisesIds.length
+                // onPressed: selectionNumberRequired == (viewModel.getMobilityIds(0).length + viewModel.getMobilityIds(1).length + viewModel.getMobilityIds(2).length)
+                //     ? () => handleNextButton(context, viewModel, trainingId)
+                //     : null,
+                onPressed: selectionNumberRequired == (viewModel.customMobilityExerciseIds[0]!.length + viewModel.customMobilityExerciseIds[1]!.length + viewModel.customMobilityExerciseIds[2]!.length)
                     ? () => handleNextButton(context, viewModel, trainingId)
                     : null,
                 gradientColors: AppGradients.greenGradient,
