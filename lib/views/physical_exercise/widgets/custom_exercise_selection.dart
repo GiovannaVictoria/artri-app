@@ -35,6 +35,7 @@ class _CustomExerciseSelectionState
         final exercises = viewModel.getExercisesForIndex(trainingId);
         final selectionNumber = viewModel.selectionNumbers[viewModel.currentDifficulty]![trainingId];
         final currentCategory = viewModel.customCategories[trainingId];
+        final selectionNumberRequired = viewModel.totalExercisesNeeded[viewModel.currentDifficulty]![trainingId];
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,7 +83,9 @@ class _CustomExerciseSelectionState
             ),
             CustomSolidButton(
               text: 'Próximo'.toUpperCase(),
-              onPressed: () => handleNextButton(context, viewModel, trainingId),
+              onPressed: selectionNumberRequired == viewModel.customExercisesIds.length
+                  ? () => handleNextButton(context, viewModel, trainingId)
+                  : null,
               gradientColors: AppGradients.greenGradient,
               textStyle: GoogleFonts.montserrat(
                 fontSize: 30,
