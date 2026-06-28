@@ -33,7 +33,7 @@ class _CustomExerciseSelectionState
         final exercises = viewModel.getExercisesForIndex(trainingId);
         final selectionNumber = viewModel.selectionNumbers[viewModel.currentDifficulty]![trainingId];
         final currentCategory = viewModel.customCategories[trainingId];
-        final selectionNumberRequired = viewModel.totalExercisesNeeded[viewModel.currentDifficulty]![trainingId];
+        final selectionNumberRequired = viewModel.totalExercisesNeeded[viewModel.currentDifficulty]![trainingId] ?? 0;
         final firstPartMobility = viewModel.customMobility[viewModel.currentDifficulty]![0];
         final secondPartMobility = viewModel.customMobility[viewModel.currentDifficulty]![1];
         final thirdPartMobility = viewModel.customMobility[viewModel.currentDifficulty]![2];
@@ -44,141 +44,129 @@ class _CustomExerciseSelectionState
             mainAxisSize: MainAxisSize.min,
             spacing: 16,
             children: [
-
-              Text(
-                'Selecione $firstPartMobility ${firstPartMobility == 1
-                    ? 'exercício'
-                    : 'exercícios'} de mobilidade para ${viewModel.mobilityParts[0]}:',
-                style: GoogleFonts.montserrat(
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    color: AppColors.darkGreen,
-                  ),
-                ),
-              ),
               Flexible(
                 fit: FlexFit.tight,
                 child: Scrollbar(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                    const SizedBox(height: 16),
-                    itemCount: viewModel.totalMobility[0],
-                    itemBuilder: (context, index) {
-                      final exercise = exercises[index];
-                      return Row(
-                        spacing: 8,
-                        children: [
-                          Expanded(
-                            child: ExerciseTile(
-                              exerciseName: exercise.name,
-                              customIcon: CupertinoIcons.play_arrow_solid,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      spacing: 16,
+                      children: [
+                        // SEÇÃO 1
+                        Text(
+                          'Selecione $firstPartMobility ${firstPartMobility == 1 ? 'exercício' : 'exercícios'} de mobilidade para ${viewModel.mobilityParts[0]}:',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              fontSize: 16,
+                              color: AppColors.darkGreen,
                             ),
                           ),
-                          Checkbox(
-                            value: viewModel.customExercisesIds.contains(
-                                exercise.id,),
-                            onChanged: (value) {
-                              viewModel.toggleCustomExerciseSelection(
-                                  exercise.id,);
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-              ),
-              Text(
-                'Selecione $secondPartMobility ${secondPartMobility == 1
-                    ? 'exercício'
-                    : 'exercícios'} de mobilidade para ${viewModel.mobilityParts[1]}:',
-                style: GoogleFonts.montserrat(
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    color: AppColors.darkGreen,
-                  ),
-                ),
-              ),
-              Flexible(
-                fit: FlexFit.tight,
-                child: Scrollbar(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                    const SizedBox(height: 16),
-                    itemCount: viewModel.totalMobility[1],
-                    itemBuilder: (context, index) {
-                      final exercise = exercises[index + viewModel.totalMobility[0]];
-                      return Row(
-                        spacing: 8,
-                        children: [
-                          Expanded(
-                            child: ExerciseTile(
-                              exerciseName: exercise.name,
-                              customIcon: CupertinoIcons.play_arrow_solid,
+                        ),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          separatorBuilder: (context, index) => const SizedBox(height: 16),
+                          itemCount: viewModel.totalMobility[0],
+                          itemBuilder: (context, index) {
+                            final exercise = exercises[index];
+                            return Row(
+                              spacing: 8,
+                              children: [
+                                Expanded(
+                                  child: ExerciseTile(
+                                    exerciseName: exercise.name,
+                                    customIcon: CupertinoIcons.play_arrow_solid,
+                                  ),
+                                ),
+                                Checkbox(
+                                  value: viewModel.customExercisesIds.contains(exercise.id),
+                                  onChanged: (value) {
+                                    viewModel.toggleCustomExerciseSelection(exercise.id);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                        // SEÇÃO 2
+                        Text(
+                          'Selecione $secondPartMobility ${secondPartMobility == 1 ? 'exercício' : 'exercícios'} de mobilidade para ${viewModel.mobilityParts[1]}:',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              fontSize: 16,
+                              color: AppColors.darkGreen,
                             ),
                           ),
-                          Checkbox(
-                            value: viewModel.customExercisesIds.contains(
-                              exercise.id,),
-                            onChanged: (value) {
-                              viewModel.toggleCustomExerciseSelection(
-                                exercise.id,);
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-              ),
-              Text(
-                'Selecione $thirdPartMobility ${thirdPartMobility == 1
-                    ? 'exercício'
-                    : 'exercícios'} de mobilidade para ${viewModel.mobilityParts[2]}:',
-                style: GoogleFonts.montserrat(
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    color: AppColors.darkGreen,
-                  ),
-                ),
-              ),
-              Flexible(
-                fit: FlexFit.tight,
-                child: Scrollbar(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                    const SizedBox(height: 16),
-                    itemCount: viewModel.totalMobility[2],
-                    itemBuilder: (context, index) {
-                      final exercise = exercises[index + viewModel.totalMobility[0] + viewModel.totalMobility[1]];
-                      return Row(
-                        spacing: 8,
-                        children: [
-                          Expanded(
-                            child: ExerciseTile(
-                              exerciseName: exercise.name,
-                              customIcon: CupertinoIcons.play_arrow_solid,
+                        ),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          separatorBuilder: (context, index) => const SizedBox(height: 16),
+                          itemCount: viewModel.totalMobility[1],
+                          itemBuilder: (context, index) {
+                            final exercise = exercises[index + viewModel.totalMobility[0]];
+                            return Row(
+                              spacing: 8,
+                              children: [
+                                Expanded(
+                                  child: ExerciseTile(
+                                    exerciseName: exercise.name,
+                                    customIcon: CupertinoIcons.play_arrow_solid,
+                                  ),
+                                ),
+                                Checkbox(
+                                  value: viewModel.customExercisesIds.contains(exercise.id),
+                                  onChanged: (value) {
+                                    viewModel.toggleCustomExerciseSelection(exercise.id);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                        // SEÇÃO 3
+                        Text(
+                          'Selecione $thirdPartMobility ${thirdPartMobility == 1 ? 'exercício' : 'exercícios'} de mobilidade para ${viewModel.mobilityParts[2]}:',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              fontSize: 16,
+                              color: AppColors.darkGreen,
                             ),
                           ),
-                          Checkbox(
-                            value: viewModel.customExercisesIds.contains(
-                              exercise.id,),
-                            onChanged: (value) {
-                              viewModel.toggleCustomExerciseSelection(
-                                exercise.id,);
-                            },
-                          ),
-                        ],
-                      );
-                    },
+                        ),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          separatorBuilder: (context, index) => const SizedBox(height: 16),
+                          itemCount: viewModel.totalMobility[2],
+                          itemBuilder: (context, index) {
+                            final exercise = exercises[index + viewModel.totalMobility[0] + viewModel.totalMobility[1]];
+                            return Row(
+                              spacing: 8,
+                              children: [
+                                Expanded(
+                                  child: ExerciseTile(
+                                    exerciseName: exercise.name,
+                                    customIcon: CupertinoIcons.play_arrow_solid,
+                                  ),
+                                ),
+                                Checkbox(
+                                  value: viewModel.customExercisesIds.contains(exercise.id),
+                                  onChanged: (value) {
+                                    viewModel.toggleCustomExerciseSelection(exercise.id);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-
               CustomSolidButton(
                 text: 'Próximo'.toUpperCase(),
-                onPressed: selectionNumberRequired ==
-                    viewModel.customExercisesIds.length
+                onPressed: selectionNumberRequired == viewModel.customExercisesIds.length
                     ? () => handleNextButton(context, viewModel, trainingId)
                     : null,
                 gradientColors: AppGradients.greenGradient,
@@ -188,7 +176,6 @@ class _CustomExerciseSelectionState
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
             ],
           );
         } else {
@@ -198,9 +185,7 @@ class _CustomExerciseSelectionState
             spacing: 16,
             children: [
               Text(
-                'Selecione $selectionNumber ${selectionNumber == 1
-                    ? 'exercício'
-                    : 'exercícios'} da categoria $currentCategory:',
+                'Selecione $selectionNumber ${selectionNumber == 1 ? 'exercício' : 'exercícios'} da categoria $currentCategory:',
                 style: GoogleFonts.montserrat(
                   textStyle: const TextStyle(
                     fontSize: 16,
@@ -212,8 +197,7 @@ class _CustomExerciseSelectionState
                 fit: FlexFit.tight,
                 child: Scrollbar(
                   child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                    const SizedBox(height: 16),
+                    separatorBuilder: (context, index) => const SizedBox(height: 16),
                     itemCount: exercises.length,
                     itemBuilder: (context, index) {
                       final exercise = exercises[index];
@@ -227,11 +211,9 @@ class _CustomExerciseSelectionState
                             ),
                           ),
                           Checkbox(
-                            value: viewModel.customExercisesIds.contains(
-                                exercise.id,),
+                            value: viewModel.customExercisesIds.contains(exercise.id),
                             onChanged: (value) {
-                              viewModel.toggleCustomExerciseSelection(
-                                  exercise.id,);
+                              viewModel.toggleCustomExerciseSelection(exercise.id);
                             },
                           ),
                         ],
@@ -242,8 +224,7 @@ class _CustomExerciseSelectionState
               ),
               CustomSolidButton(
                 text: 'Próximo'.toUpperCase(),
-                onPressed: selectionNumberRequired ==
-                    viewModel.customExercisesIds.length
+                onPressed: selectionNumberRequired == viewModel.customExercisesIds.length
                     ? () => handleNextButton(context, viewModel, trainingId)
                     : null,
                 gradientColors: AppGradients.greenGradient,
