@@ -33,7 +33,7 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   final intermediate = <int, int>{0:5, 1:3, 2:3, 3:3, 4:2, 5:3};
   final advanced = <int, int>{0:3, 1:3, 2:3, 3:3, 4:2, 5:3};
   final selectionNumbers = <ExerciseDifficulty, Map<int, int>>{};
-  final customCategories = <int, CustomType>{0: CustomType.aerobic, 1: CustomType.arms, 2: CustomType.core, 3: CustomType.legs, 4: CustomType.mobility, 5: CustomType.stretching};
+  final customCategories = <int, CustomType>{0: CustomType.mobility, 1: CustomType.aerobic, 2: CustomType.legs, 3: CustomType.arms, 4: CustomType.core, 5: CustomType.stretching};
 
   final totalExercisesNeededBeginner = <int, int>{0:5, 1:7, 2:9, 3:11, 4:12, 5:15};
   final totalExercisesNeededIntermediate = <int, int>{0:5, 1:8, 2:11, 3:14, 4:16, 5:19};
@@ -43,7 +43,7 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   final beginnerMobility = [2, 2, 1];
   final intermediateMobility = [2, 2, 1];
   final advancedMobility = [1, 1, 1];
-  final mobilityParts = ['os braços', 'as pernas', 'o tronco'];
+  final mobilityParts = ['as pernas', 'os braços', 'o tronco'];
   final customMobility = <ExerciseDifficulty, List<int>>{};
   final totalMobility = [3, 3, 2];
 

@@ -188,7 +188,7 @@ class _CustomExerciseSelectionState
             spacing: 16,
             children: [
               Text(
-                'Selecione $selectionNumber ${selectionNumber == 1 ? 'exercício' : 'exercícios'} da categoria $currentCategory:',
+                'Selecione $selectionNumber ${selectionNumber == 1 ? 'exercício' : 'exercícios'} da categoria ${currentCategory.toString().toLowerCase()}:',
                 style: GoogleFonts.montserrat(
                   textStyle: const TextStyle(
                     fontSize: 16,
