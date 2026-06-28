@@ -33,10 +33,17 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   final selectionNumbers = <ExerciseDifficulty, Map<int, int>>{};
   final customCategories = <int, CustomType>{0: CustomType.aerobic, 1: CustomType.arms, 2: CustomType.core, 3: CustomType.legs, 4: CustomType.mobility, 5: CustomType.stretching};
 
-  final totalExercisesNeededBegginer = <int, int>{0:5, 1:7, 2:9, 3:11, 4:12, 5:15};
+  final totalExercisesNeededBeginner = <int, int>{0:5, 1:7, 2:9, 3:11, 4:12, 5:15};
   final totalExercisesNeededIntermediate = <int, int>{0:5, 1:8, 2:11, 3:14, 4:16, 5:19};
   final totalExercisesNeededAdvanced = <int, int>{0:3, 1:6, 2:9, 3:12, 4:14, 5:17};
   final totalExercisesNeeded = <ExerciseDifficulty, Map<int, int>>{};
+
+  final beginnerMobility = [2, 2, 1];
+  final intermediateMobility = [2, 2, 1];
+  final advancedMobility = [1, 1, 1];
+  final mobilityParts = ['as pernas', 'os braços', 'o tronco'];
+  final customMobility = <ExerciseDifficulty, List<int>>{};
+  final totalMobility = [3, 3, 2];
 
   final PhysicalExercisesService _physicalExercisesService;
   
@@ -53,9 +60,12 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
     selectionNumbers[ExerciseDifficulty.easy] = beginner;
     selectionNumbers[ExerciseDifficulty.medium] = intermediate;
     selectionNumbers[ExerciseDifficulty.hard] = advanced;
-    totalExercisesNeeded[ExerciseDifficulty.easy] = totalExercisesNeededBegginer;
+    totalExercisesNeeded[ExerciseDifficulty.easy] = totalExercisesNeededBeginner;
     totalExercisesNeeded[ExerciseDifficulty.medium] = totalExercisesNeededIntermediate;
     totalExercisesNeeded[ExerciseDifficulty.hard] = totalExercisesNeededAdvanced;
+    customMobility[ExerciseDifficulty.easy] = beginnerMobility;
+    customMobility[ExerciseDifficulty.medium] = intermediateMobility;
+    customMobility[ExerciseDifficulty.hard] = advancedMobility;
   }
 
   void handleTrainingTypeSelection(TrainingType type, BuildContext context) {
