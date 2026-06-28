@@ -190,6 +190,7 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
       var currentPath = RouterHelper.getUriFromContext(context);
       int startIndex = 0;
 
+      _customExercisesCache.clear();
       _customExercisesIds.clear();
       _customMobilityExerciseIds.clear();
       _customMobilityExerciseIds[0] = [];
