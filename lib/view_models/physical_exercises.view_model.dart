@@ -74,8 +74,6 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
     _currentTrainingType = type;
 
     context.go(_getRouteForTrainingType(type));
-
-    log(selectionNumbers[ExerciseDifficulty.easy]![0] as String);
   }
 
   String _getRouteForTrainingType(TrainingType type) {
