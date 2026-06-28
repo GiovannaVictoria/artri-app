@@ -51,8 +51,7 @@ class _CustomExerciseRoutineOverviewState
                       const SizedBox(height: 16),
                   itemCount: viewModel.categoriesCount,
                   itemBuilder: (context, index) => ExerciseTile(
-                    // TODO: substituir X pelos valores numéricos
-                    exerciseName: 'Escolha X exercícios da categoria "${CustomType.values.elementAt(index).toString()}"',
+                    exerciseName: 'Escolha ${viewModel.selectionNumbers[viewModel.currentDifficulty]![index]} ${viewModel.selectionNumbers[viewModel.currentDifficulty]![index] == 1 ? 'exercício' : 'exercícios'} da categoria "${CustomType.values.elementAt(index).toString()}"',
                     customIcon: CupertinoIcons.create,
                   ),
                 ),

@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 class PhysicalExercisesViewModel extends ChangeNotifier {
   TrainingType? _currentTrainingType;
   ExerciseDifficulty? _currentDifficulty;
+  ExerciseDifficulty? get currentDifficulty => _currentDifficulty;
   List<ExerciseQueued> _queuedExercises = [];
   int? _currentExerciseIndex;
   List<ExerciseQueued> get exercises => _queuedExercises;
@@ -26,6 +27,12 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
       : _queuedCustomExercises[_currentExerciseIndex ?? 0];
   int _trainingId = 0;
 
+  final beginner = <int, int>{0:5, 1:2, 2:2, 3:2, 4:1, 5:3};
+  final intermediate = <int, int>{0:5, 1:3, 2:3, 3:3, 4:2, 5:3};
+  final advanced = <int, int>{0:3, 1:3, 2:3, 3:3, 4:2, 5:3};
+  final selectionNumbers = <ExerciseDifficulty, Map<int, int>>{};
+  final customCategories = <int, CustomType>{0: CustomType.aerobic, 1: CustomType.arms, 2: CustomType.core, 3: CustomType.legs, 4: CustomType.mobility, 5: CustomType.stretching};
+
   final PhysicalExercisesService _physicalExercisesService;
   
   // Cache para armazenar os exercícios de cada categoria de forma independente
@@ -35,12 +42,20 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   final int _categoriesCount = CustomType.values.length;
   int get categoriesCount => _categoriesCount;
 
-  PhysicalExercisesViewModel(this._physicalExercisesService);
+  // PhysicalExercisesViewModel(this._physicalExercisesService);
+
+  PhysicalExercisesViewModel(this._physicalExercisesService) {
+    selectionNumbers[ExerciseDifficulty.easy] = beginner;
+    selectionNumbers[ExerciseDifficulty.medium] = intermediate;
+    selectionNumbers[ExerciseDifficulty.hard] = advanced;
+  }
 
   void handleTrainingTypeSelection(TrainingType type, BuildContext context) {
     _currentTrainingType = type;
 
     context.go(_getRouteForTrainingType(type));
+
+    log(selectionNumbers[ExerciseDifficulty.easy]![0] as String);
   }
 
   String _getRouteForTrainingType(TrainingType type) {

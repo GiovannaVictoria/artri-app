@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:artriapp/utils/index.dart';
 import 'package:artriapp/views/physical_exercise/widgets/index.dart';
 import 'package:artriapp/views/widgets/index.dart';
@@ -31,6 +33,8 @@ class _CustomExerciseSelectionState
       builder: (context, viewModel, child) {
         final trainingId = viewModel.getTrainingId(context);
         final exercises = viewModel.getExercisesForIndex(trainingId);
+        final selectionNumber = viewModel.selectionNumbers[viewModel.currentDifficulty]![trainingId];
+        final currentCategory = viewModel.customCategories[trainingId];
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -38,8 +42,7 @@ class _CustomExerciseSelectionState
           spacing: 16,
           children: [
             Text(
-              // TODO: Ajustar
-              'Selecione X exercícios das opções abaixo:',
+              'Selecione $selectionNumber ${selectionNumber == 1 ? 'exercício' : 'exercícios'} da categoria $currentCategory:',
               style: GoogleFonts.montserrat(
                 textStyle: const TextStyle(
                   fontSize: 16,
