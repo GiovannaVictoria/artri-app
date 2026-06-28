@@ -32,7 +32,12 @@ class _CustomExerciseSelectionState
         final trainingId = viewModel.getTrainingId(context);
         final exercises = viewModel.getExercisesForIndex(trainingId);
         final selectionNumber = viewModel.selectionNumbers[viewModel.currentDifficulty]![trainingId];
-        final currentCategory = viewModel.customCategories[trainingId];
+        final currentCategory = CustomType.values.elementAt(trainingId);
+        final prepositionCategory =
+          currentCategory == CustomType.legs ? 'para as' :
+          currentCategory == CustomType.arms ? 'para os' :
+          currentCategory == CustomType.core ? 'para o' :
+          'de';
         final selectionNumberRequired = viewModel.totalExercisesNeeded[viewModel.currentDifficulty]![trainingId] ?? 0;
         final firstPartMobility = viewModel.customMobility[viewModel.currentDifficulty]![0];
         final secondPartMobility = viewModel.customMobility[viewModel.currentDifficulty]![1];
@@ -188,7 +193,7 @@ class _CustomExerciseSelectionState
             spacing: 16,
             children: [
               Text(
-                'Selecione $selectionNumber ${selectionNumber == 1 ? 'exercício' : 'exercícios'} da categoria ${currentCategory.toString().toLowerCase()}:',
+                'Selecione $selectionNumber ${selectionNumber == 1 ? 'exercício' : 'exercícios'} $prepositionCategory ${currentCategory.toString().toLowerCase()}:',
                 style: GoogleFonts.montserrat(
                   textStyle: const TextStyle(
                     fontSize: 16,

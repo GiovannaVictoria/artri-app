@@ -33,7 +33,6 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   final intermediate = <int, int>{0:5, 1:3, 2:3, 3:3, 4:2, 5:3};
   final advanced = <int, int>{0:3, 1:3, 2:3, 3:3, 4:2, 5:3};
   final selectionNumbers = <ExerciseDifficulty, Map<int, int>>{};
-  final customCategories = <int, CustomType>{0: CustomType.mobility, 1: CustomType.aerobic, 2: CustomType.legs, 3: CustomType.arms, 4: CustomType.core, 5: CustomType.stretching};
 
   final totalExercisesNeededBeginner = <int, int>{0:5, 1:7, 2:9, 3:11, 4:12, 5:15};
   final totalExercisesNeededIntermediate = <int, int>{0:5, 1:8, 2:11, 3:14, 4:16, 5:19};

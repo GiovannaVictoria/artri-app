@@ -51,7 +51,7 @@ class _CustomExerciseRoutineOverviewState
                       const SizedBox(height: 16),
                   itemCount: viewModel.categoriesCount,
                   itemBuilder: (context, index) => ExerciseTile(
-                    exerciseName: 'Escolha ${viewModel.selectionNumbers[viewModel.currentDifficulty]![index]} ${viewModel.selectionNumbers[viewModel.currentDifficulty]![index] == 1 ? 'exercício' : 'exercícios'} da categoria "${CustomType.values.elementAt(index).toString()}"',
+                    exerciseName: 'Escolha ${viewModel.selectionNumbers[viewModel.currentDifficulty]![index]} ${viewModel.selectionNumbers[viewModel.currentDifficulty]![index] == 1 ? 'exercício' : 'exercícios'} ${CustomType.values.elementAt(index) == CustomType.legs ? 'para as' : CustomType.values.elementAt(index) == CustomType.arms ? 'para os' : CustomType.values.elementAt(index) == CustomType.core ? 'para o' : 'de'} ${CustomType.values.elementAt(index).toString().toLowerCase()}',
                     customIcon: CupertinoIcons.create,
                   ),
                 ),

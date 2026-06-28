@@ -1,9 +1,9 @@
 enum CustomType {
+  mobility,
   aerobic,
+  legs,
   arms,
   core,
-  legs,
-  mobility,
   stretching;
 
   @override
