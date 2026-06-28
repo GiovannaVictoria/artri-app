@@ -20,8 +20,8 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
       : _queuedExercises[_currentExerciseIndex ?? 0];
   final List<int> _customExercisesIds = [];
   List<int> get customExercisesIds => _customExercisesIds;
-  final customMobilityExerciseIds = <int, List<int>>{};
-  // List<int> getMobilityIds(int index) => _customMobilityExerciseIds[index] ?? [];
+  final _customMobilityExerciseIds = <int, List<int>>{};
+  List<int> getMobilityIds(int index) => _customMobilityExerciseIds[index] ?? [];
   final List<ExerciseQueued> _queuedCustomExercises = [];
   List<ExerciseQueued> get queuedCustomExercises => _queuedCustomExercises;
   ExerciseQueued? get currentCustomExercise => _currentExerciseIndex == null
@@ -48,15 +48,12 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   final totalMobility = [3, 3, 2];
 
   final PhysicalExercisesService _physicalExercisesService;
-  
-  // Cache para armazenar os exercícios de cada categoria de forma independente
+
   final Map<int, List<Exercise>> _customExercisesCache = {};
   List<Exercise> getExercisesForIndex(int index) => _customExercisesCache[index] ?? [];
   
   final int _categoriesCount = CustomType.values.length;
   int get categoriesCount => _categoriesCount;
-
-  // PhysicalExercisesViewModel(this._physicalExercisesService);
 
   PhysicalExercisesViewModel(this._physicalExercisesService) {
     selectionNumbers[ExerciseDifficulty.easy] = beginner;
@@ -68,9 +65,9 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
     customMobility[ExerciseDifficulty.easy] = beginnerMobility;
     customMobility[ExerciseDifficulty.medium] = intermediateMobility;
     customMobility[ExerciseDifficulty.hard] = advancedMobility;
-    customMobilityExerciseIds[0] = [];
-    customMobilityExerciseIds[1] = [];
-    customMobilityExerciseIds[2] = [];
+    _customMobilityExerciseIds[0] = [];
+    _customMobilityExerciseIds[1] = [];
+    _customMobilityExerciseIds[2] = [];
   }
 
   void handleTrainingTypeSelection(TrainingType type, BuildContext context) {
@@ -197,7 +194,10 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
       int startIndex = 0;
 
       _customExercisesIds.clear();
-      // _customMobilityExerciseIds.clear();
+      _customMobilityExerciseIds.clear();
+      _customMobilityExerciseIds[0] = [];
+      _customMobilityExerciseIds[1] = [];
+      _customMobilityExerciseIds[2] = [];
       
       _customExercisesCache[startIndex] = await _physicalExercisesService.getCustomExercisesFromTraining(
           TrainingType.custom, 
@@ -257,7 +257,7 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   }
 
   void toggleCustomMobilityExerciseSelection(int subcategoryId, int exerciseId) {
-    var exerciseList = customMobilityExerciseIds[subcategoryId];
+    var exerciseList = _customMobilityExerciseIds[subcategoryId];
     if (exerciseList != null) {
       if (exerciseList.contains(exerciseId)) {
         exerciseList.remove(exerciseId);
