@@ -174,7 +174,7 @@ class _CustomExerciseSelectionState
               ),
               CustomSolidButton(
                 text: 'Próximo'.toUpperCase(),
-                onPressed: selectionNumberRequired == (viewModel.getMobilityIds(0).length + viewModel.getMobilityIds(1).length + viewModel.getMobilityIds(2).length)
+                onPressed: (viewModel.getCustomMobility(viewModel.currentDifficulty)[0] == viewModel.getMobilityIds(0).length && viewModel.getCustomMobility(viewModel.currentDifficulty)[1] == viewModel.getMobilityIds(1).length && viewModel.getCustomMobility(viewModel.currentDifficulty)[2] == viewModel.getMobilityIds(2).length)
                     ? () => handleNextButton(context, viewModel, trainingId)
                     : null,
                 gradientColors: AppGradients.greenGradient,
