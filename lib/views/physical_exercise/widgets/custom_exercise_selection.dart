@@ -17,12 +17,28 @@ class CustomExerciseSelection extends StatefulWidget {
 
 class _CustomExerciseSelectionState
     extends State<CustomExerciseSelection> {
+  bool orientationsOpen = false;
+
   void handleNextButton(
       BuildContext context,
       PhysicalExercisesViewModel viewModel,
       int trainingId,
   ) {
-    viewModel.handleUpdateIndexCustomTraining(context, trainingId);
+    if (trainingId == viewModel.categoriesCount - 1) {
+      if (orientationsOpen) {
+        setState(() => orientationsOpen = false);
+        viewModel.handleUpdateIndexCustomTraining(context, trainingId);
+        return;
+      }
+
+      setState(() => orientationsOpen = true);
+      showDialog(
+        builder: (context) => OrientationsDialog(),
+        context: context,
+      );
+    } else {
+      viewModel.handleUpdateIndexCustomTraining(context, trainingId);
+    }
   }
 
   @override
@@ -186,7 +202,7 @@ class _CustomExerciseSelectionState
               ),
             ],
           );
-        } else {
+        } else if (trainingId < viewModel.categoriesCount - 1) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -232,6 +248,64 @@ class _CustomExerciseSelectionState
               ),
               CustomSolidButton(
                 text: 'Próximo'.toUpperCase(),
+                onPressed: selectionNumberRequired == viewModel.customExercisesIds.length
+                    ? () => handleNextButton(context, viewModel, trainingId)
+                    : null,
+                gradientColors: AppGradients.greenGradient,
+                textStyle: GoogleFonts.montserrat(
+                  fontSize: 30,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          );
+        } else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            spacing: 16,
+            children: [
+              Text(
+                'Selecione $selectionNumber ${selectionNumber == 1 ? 'exercício' : 'exercícios'} $prepositionCategory ${currentCategory.toString().toLowerCase()}:',
+                style: GoogleFonts.montserrat(
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    color: AppColors.darkGreen,
+                  ),
+                ),
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Scrollbar(
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => const SizedBox(height: 16),
+                    itemCount: exercises.length,
+                    itemBuilder: (context, index) {
+                      final exercise = exercises[index];
+                      return Row(
+                        spacing: 8,
+                        children: [
+                          Expanded(
+                            child: ExerciseTile(
+                              exerciseName: exercise.name,
+                              customIcon: CupertinoIcons.play_arrow_solid,
+                            ),
+                          ),
+                          Checkbox(
+                            value: viewModel.customExercisesIds.contains(exercise.id),
+                            onChanged: (value) {
+                              viewModel.toggleCustomExerciseSelection(exercise.id);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+              CustomSolidButton(
+                text: 'Começar'.toUpperCase(),
                 onPressed: selectionNumberRequired == viewModel.customExercisesIds.length
                     ? () => handleNextButton(context, viewModel, trainingId)
                     : null,
