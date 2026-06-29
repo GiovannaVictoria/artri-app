@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 class PhysicalExercisesViewModel extends ChangeNotifier {
   TrainingType? _currentTrainingType;
   ExerciseDifficulty? _currentDifficulty;
-  ExerciseDifficulty? get currentDifficulty => _currentDifficulty;
+  ExerciseDifficulty get currentDifficulty => _currentDifficulty ?? ExerciseDifficulty.easy;
   List<ExerciseQueued> _queuedExercises = [];
   int? _currentExerciseIndex;
   List<ExerciseQueued> get exercises => _queuedExercises;
@@ -33,17 +33,21 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   final intermediate = <int, int>{0:5, 1:3, 2:3, 3:3, 4:2, 5:3};
   final advanced = <int, int>{0:3, 1:3, 2:3, 3:3, 4:2, 5:3};
   final selectionNumbers = <ExerciseDifficulty, Map<int, int>>{};
+  Map<int, int> getSelectionNumber(ExerciseDifficulty difficulty) => selectionNumbers[difficulty] ?? {};
 
   final totalExercisesNeededBeginner = <int, int>{0:5, 1:7, 2:9, 3:11, 4:12, 5:15};
   final totalExercisesNeededIntermediate = <int, int>{0:5, 1:8, 2:11, 3:14, 4:16, 5:19};
   final totalExercisesNeededAdvanced = <int, int>{0:3, 1:6, 2:9, 3:12, 4:14, 5:17};
   final totalExercisesNeeded = <ExerciseDifficulty, Map<int, int>>{};
+  Map<int, int> getTotalExercisesNeeded(ExerciseDifficulty difficulty) => totalExercisesNeeded[difficulty] ?? {};
 
   final beginnerMobility = [2, 2, 1];
   final intermediateMobility = [2, 2, 1];
   final advancedMobility = [1, 1, 1];
   final mobilityParts = ['as pernas', 'os braços', 'o tronco'];
   final customMobility = <ExerciseDifficulty, List<int>>{};
+  List<int> getCustomMobility(ExerciseDifficulty difficulty) => customMobility[difficulty] ?? [];
+
   final totalMobility = [3, 3, 2];
 
   final PhysicalExercisesService _physicalExercisesService;

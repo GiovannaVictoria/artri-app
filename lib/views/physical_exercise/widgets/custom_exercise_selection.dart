@@ -31,17 +31,17 @@ class _CustomExerciseSelectionState
       builder: (context, viewModel, child) {
         final trainingId = viewModel.getTrainingId(context);
         final exercises = viewModel.getExercisesForIndex(trainingId);
-        final selectionNumber = viewModel.selectionNumbers[viewModel.currentDifficulty]![trainingId];
+        final selectionNumber = viewModel.getSelectionNumber(viewModel.currentDifficulty)[trainingId];
         final currentCategory = CustomType.values.elementAt(trainingId);
         final prepositionCategory =
           currentCategory == CustomType.legs ? 'para as' :
           currentCategory == CustomType.arms ? 'para os' :
           currentCategory == CustomType.core ? 'para o' :
           'de';
-        final selectionNumberRequired = viewModel.totalExercisesNeeded[viewModel.currentDifficulty]![trainingId] ?? 0;
-        final firstPartMobility = viewModel.customMobility[viewModel.currentDifficulty]![0];
-        final secondPartMobility = viewModel.customMobility[viewModel.currentDifficulty]![1];
-        final thirdPartMobility = viewModel.customMobility[viewModel.currentDifficulty]![2];
+        final selectionNumberRequired = viewModel.getTotalExercisesNeeded(viewModel.currentDifficulty)[trainingId] ?? 0;
+        final firstPartMobility = viewModel.getCustomMobility(viewModel.currentDifficulty)[0];
+        final secondPartMobility = viewModel.getCustomMobility(viewModel.currentDifficulty)[1];
+        final thirdPartMobility = viewModel.getCustomMobility(viewModel.currentDifficulty)[2];
 
         if (trainingId == 0) {
           return Column(
